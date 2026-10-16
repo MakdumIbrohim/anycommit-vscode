@@ -11,9 +11,19 @@ vi.mock('vscode', () => ({
   }
 }));
 
-import { getRecentCommitMessages, Repository } from '../src/git';
+import { getRecentCommitMessages, getCurrentBranchName, Repository } from '../src/git';
 
 describe('git helper', () => {
+  it('gets current branch name from repository state', () => {
+    const repoWithBranch: Partial<Repository> = {
+      state: { HEAD: { name: 'feature/PROJ-123-login' } }
+    };
+    expect(getCurrentBranchName(repoWithBranch as Repository)).toBe('feature/PROJ-123-login');
+
+    const repoWithoutBranch: Partial<Repository> = {};
+    expect(getCurrentBranchName(repoWithoutBranch as Repository)).toBeUndefined();
+  });
+
   it('extracts first lines of recent commits', async () => {
     const mockRepo: Partial<Repository> = {
       log: vi.fn().mockResolvedValue([

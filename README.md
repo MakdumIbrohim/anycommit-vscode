@@ -73,6 +73,8 @@ You can customize AnyCommit via VS Code Settings (`settings.json`):
 | `aiCommit.style` | `"conventional"` | Commit style format: `conventional`, `gitmoji`, or `plain`. |
 | `aiCommit.includeBody` | `false` | Include detailed bullet points body below the commit subject. |
 | `aiCommit.useRecentCommits` | `true` | Include recent repository commits as tone and style examples. |
+| `aiCommit.extractTicketFromBranch` | `false` | Automatically extract ticket ID from current git branch name. |
+| `aiCommit.ticketPattern` | `"[A-Z]+-[0-9]+"` | Regex pattern used to extract ticket ID from branch name. |
 | `aiCommit.extraInstructions` | `""` | Custom prompt instructions (e.g. "include issue ticket from branch name"). |
 | `aiCommit.maxDiffChars` | `20000` | Maximum character length of git diff sent to LLM. |
 | `aiCommit.temperature` | `0.2` | Sampling temperature (0.0 to 2.0). |

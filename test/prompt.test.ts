@@ -45,4 +45,21 @@ describe('prompt builder', () => {
     expect(messages[0].content).toContain('- feat: initial commit');
     expect(messages[0].content).toContain('- fix: resolve bug');
   });
+
+  it('includes ticket in instructions when provided', () => {
+    const conventionalMessages = buildMessages({
+      diff: dummyDiff,
+      style: 'conventional',
+      ticket: 'PROJ-123'
+    });
+    expect(conventionalMessages[0].content).toContain('PROJ-123');
+    expect(conventionalMessages[0].content).toContain('<type>(PROJ-123): <description>');
+
+    const plainMessages = buildMessages({
+      diff: dummyDiff,
+      style: 'plain',
+      ticket: 'PROJ-123'
+    });
+    expect(plainMessages[0].content).toContain('[PROJ-123]');
+  });
 });

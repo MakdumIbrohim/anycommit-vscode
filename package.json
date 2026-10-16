@@ -120,6 +120,16 @@
           "default": true,
           "description": "Include recent repository commits in the prompt as style and tone examples."
         },
+        "aiCommit.extractTicketFromBranch": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically extract issue/ticket ID from the current git branch name and include it in the commit message."
+        },
+        "aiCommit.ticketPattern": {
+          "type": "string",
+          "default": "[A-Z]+-[0-9]+",
+          "description": "Regular expression pattern used to extract issue/ticket ID from branch name (e.g. [A-Z]+-[0-9]+ for JIRA/Linear, or (?:issue|gh)-[0-9]+)."
+        },
         "aiCommit.extraInstructions": {
           "type": "string",
           "default": "",

@@ -12,6 +12,7 @@ export interface BuildPromptOptions {
   includeBody?: boolean;
   extraInstructions?: string;
   recentCommits?: string[];
+  ticket?: string;
 }
 
 export function buildMessages(options: BuildPromptOptions): ChatMessage[] {
@@ -47,6 +48,19 @@ export function buildMessages(options: BuildPromptOptions): ChatMessage[] {
     systemInstructions.push(
       'Output a single line only (subject line, under 72 characters). Do not include any body or extra lines.'
     );
+  }
+
+  if (options.ticket && options.ticket.trim()) {
+    const trimmedTicket = options.ticket.trim();
+    if (style === 'conventional') {
+      systemInstructions.push(
+        `Include the issue/ticket ID "${trimmedTicket}" as the scope or prefix in the subject (e.g. "<type>(${trimmedTicket}): <description>").`
+      );
+    } else {
+      systemInstructions.push(
+        `Include the issue/ticket ID "${trimmedTicket}" in the subject line (e.g. "[${trimmedTicket}] <description>").`
+      );
+    }
   }
 
   if (options.extraInstructions && options.extraInstructions.trim()) {

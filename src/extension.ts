@@ -3,6 +3,7 @@ import { PROVIDER_PRESETS, ProviderId, resolveBaseUrl } from './core/providers';
 import { normalizeBaseUrl, isNonLocalhostHttp } from './core/url';
 import { filterAndTruncateDiff } from './core/diff';
 import { buildMessages, CommitStyle } from './core/prompt';
+import { extractTicket } from './core/branch';
 import { cleanModelOutput } from './core/clean';
 import { chatCompleteStream, listModels } from './core/client';
 import { getApiKey, setApiKey, clearApiKey } from './secrets';
@@ -11,7 +12,8 @@ import {
   getActiveRepository,
   getDiffFromRepository,
   setCommitMessage,
-  getRecentCommitMessages
+  getRecentCommitMessages,
+  getCurrentBranchName
 } from './git';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -258,6 +260,8 @@ export function activate(context: vscode.ExtensionContext) {
     const style = (config.get<string>('style') as CommitStyle) || 'conventional';
     const includeBody = config.get<boolean>('includeBody') ?? false;
     const useRecentCommits = config.get<boolean>('useRecentCommits') ?? true;
+    const extractTicketFromBranch = config.get<boolean>('extractTicketFromBranch') ?? false;
+    const ticketPattern = config.get<string>('ticketPattern') || '[A-Z]+-[0-9]+';
     const extraInstructions = config.get<string>('extraInstructions') || '';
     const temperature = config.get<number>('temperature') ?? 0.2;
     const maxTokens = config.get<number>('maxTokens') ?? 400;
@@ -268,6 +272,12 @@ export function activate(context: vscode.ExtensionContext) {
       recentCommits = await getRecentCommitMessages(repo, 5);
     }
 
+    let ticket: string | undefined;
+    if (extractTicketFromBranch) {
+      const branchName = getCurrentBranchName(repo);
+      ticket = extractTicket(branchName, ticketPattern);
+    }
+
     const filteredDiff = filterAndTruncateDiff(diffResult.diff, maxDiffChars);
     const messages = buildMessages({
       diff: filteredDiff,
@@ -275,7 +285,8 @@ export function activate(context: vscode.ExtensionContext) {
       language,
       includeBody,
       extraInstructions,
-      recentCommits
+      recentCommits,
+      ticket
     });
 
     await vscode.window.withProgress(

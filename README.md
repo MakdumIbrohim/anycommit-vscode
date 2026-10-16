@@ -9,8 +9,11 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=makdumibrohim.anycommit"><img src="https://img.shields.io/badge/VS%20Code-^1.85.0-blue.svg" alt="VS Code Version" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=makdumibrohim.anycommit"><img src="https://img.shields.io/visual-studio-marketplace/v/makdumibrohim.anycommit?label=Version&color=blue" alt="Version" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=makdumibrohim.anycommit"><img src="https://img.shields.io/badge/VS%20Code-%5E1.85.0-007ACC?logo=visualstudiocode" alt="VS Code Version" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License MIT" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=makdumibrohim.anycommit"><img src="https://img.shields.io/visual-studio-marketplace/i/makdumibrohim.anycommit" alt="Installs" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=makdumibrohim.anycommit"><img src="https://img.shields.io/visual-studio-marketplace/r/makdumibrohim.anycommit" alt="Rating" /></a>
   <img src="https://img.shields.io/badge/Dependencies-0%20Runtime-orange.svg" alt="Zero Runtime Dependencies" />
 </p>
 

@@ -1,0 +1,162 @@
+{
+  "name": "anycommit",
+  "displayName": "AnyCommit: AI Commit Message",
+  "description": "Generate clean git commit messages from staged diff using OpenAI-compatible APIs, including local gateways like 9router and OmniRoute.",
+  "version": "0.1.0",
+  "publisher": "REPLACE_ME",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MakdumIbrohim/anycommit-vscode.git"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Machine Learning",
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "aiCommit.generate",
+        "title": "AI Commit: Generate Commit Message",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "aiCommit.setApiKey",
+        "title": "AI Commit: Set API Key"
+      },
+      {
+        "command": "aiCommit.clearApiKey",
+        "title": "AI Commit: Clear API Key"
+      },
+      {
+        "command": "aiCommit.selectModel",
+        "title": "AI Commit: Select Model"
+      },
+      {
+        "command": "aiCommit.selectProvider",
+        "title": "AI Commit: Select Provider"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "aiCommit.generate",
+          "when": "scmProvider == git",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AnyCommit",
+      "properties": {
+        "aiCommit.provider": {
+          "type": "string",
+          "default": "9router",
+          "enum": [
+            "9router",
+            "omniroute",
+            "openai",
+            "openrouter",
+            "groq",
+            "deepseek",
+            "custom"
+          ],
+          "enumDescriptions": [
+            "Local 9router gateway (default http://localhost:20128/v1)",
+            "Local OmniRoute gateway (default http://localhost:20128/v1)",
+            "OpenAI official API (https://api.openai.com/v1)",
+            "OpenRouter API (https://openrouter.ai/api/v1)",
+            "Groq API (https://api.groq.com/openai/v1)",
+            "DeepSeek API (https://api.deepseek.com/v1)",
+            "Custom OpenAI-compatible endpoint"
+          ],
+          "description": "AI provider preset or custom endpoint."
+        },
+        "aiCommit.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Base URL override (e.g. http://localhost:20128/v1). Required for custom provider."
+        },
+        "aiCommit.model": {
+          "type": "string",
+          "default": "",
+          "description": "Model or combo name (e.g. cc/claude-opus-4-6, premium-coding, auto/best-coding)."
+        },
+        "aiCommit.language": {
+          "type": "string",
+          "default": "English",
+          "description": "Language used for generated commit messages (e.g. English, Indonesian)."
+        },
+        "aiCommit.style": {
+          "type": "string",
+          "default": "conventional",
+          "enum": [
+            "conventional",
+            "gitmoji",
+            "plain"
+          ],
+          "enumDescriptions": [
+            "Conventional Commits (e.g. feat(auth): add login)",
+            "Gitmoji style (e.g. :sparkles: add login)",
+            "Plain imperative sentence (e.g. Add user login flow)"
+          ],
+          "description": "Format style of the generated commit message."
+        },
+        "aiCommit.includeBody": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include detailed bullet points in the commit message body."
+        },
+        "aiCommit.extraInstructions": {
+          "type": "string",
+          "default": "",
+          "description": "Additional custom instructions for commit message prompt (e.g. include ticket ID from branch name)."
+        },
+        "aiCommit.maxDiffChars": {
+          "type": "integer",
+          "default": 20000,
+          "description": "Maximum number of git diff characters sent to LLM."
+        },
+        "aiCommit.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Model sampling temperature (0 to 2)."
+        },
+        "aiCommit.maxTokens": {
+          "type": "integer",
+          "default": 400,
+          "description": "Maximum completion tokens returned by LLM."
+        },
+        "aiCommit.timeoutSeconds": {
+          "type": "integer",
+          "default": 60,
+          "description": "Request timeout in seconds."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "vitest run",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.24.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2"
+  }
+}

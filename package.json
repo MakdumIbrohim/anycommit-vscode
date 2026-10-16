@@ -27,7 +27,10 @@
       {
         "command": "aiCommit.generate",
         "title": "AI Commit: Generate Commit Message",
-        "icon": "$(sparkle)"
+        "icon": {
+          "light": "media/icon.png",
+          "dark": "media/icon.png"
+        }
       },
       {
         "command": "aiCommit.regenerate",

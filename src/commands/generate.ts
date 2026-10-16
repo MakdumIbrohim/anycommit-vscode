@@ -7,7 +7,7 @@ import { buildMessages } from '../core/prompt';
 import { extractTicket } from '../core/branch';
 import { extractFilePathsFromDiff, detectScopeFromFiles } from '../core/scope';
 import { cleanModelOutput } from '../core/clean';
-import { chatCompleteStream } from '../core/client';
+import { chatComplete, chatCompleteStream } from '../core/client';
 import { resolveApiKey } from '../secrets';
 import {
   getGitApi,
@@ -156,8 +156,10 @@ export async function handleGenerate(
       token.onCancellationRequested(() => controller.abort());
 
       let accumulated = '';
+      let rawResult = '';
+
       try {
-        const rawResult = await chatCompleteStream({
+        rawResult = await chatCompleteStream({
           baseUrl,
           apiKey,
           model,
@@ -168,10 +170,46 @@ export async function handleGenerate(
           signal: controller.signal,
           onToken: (tokenDelta) => {
             accumulated += tokenDelta;
-            setCommitMessage(repo, accumulated);
+            const liveCleaned = cleanModelOutput(accumulated);
+            if (liveCleaned) {
+              setCommitMessage(repo, liveCleaned);
+            }
           }
         });
+      } catch (streamErr: any) {
+        if (controller.signal.aborted) {
+          vscode.window.showInformationMessage('AnyCommit: Generation cancelled.');
+          return;
+        }
 
+        // Auto fallback to non-streaming if stream mode fails on model/gateway
+        const isStreamUnsupported =
+          streamErr?.statusCode === 400 ||
+          streamErr?.statusCode === 422 ||
+          streamErr?.message?.toLowerCase().includes('stream') ||
+          streamErr?.message?.toLowerCase().includes('sse');
+
+        if (isStreamUnsupported) {
+          try {
+            rawResult = await chatComplete({
+              baseUrl,
+              apiKey,
+              model,
+              messages,
+              temperature: effectiveTemperature,
+              maxTokens,
+              timeoutSeconds,
+              signal: controller.signal
+            });
+          } catch (nonStreamErr) {
+            throw nonStreamErr;
+          }
+        } else {
+          throw streamErr;
+        }
+      }
+
+      try {
         const cleaned = cleanModelOutput(rawResult);
         setCommitMessage(repo, cleaned);
       } catch (err: any) {

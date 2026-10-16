@@ -181,8 +181,8 @@
         },
         "aiCommit.maxTokens": {
           "type": "integer",
-          "default": 400,
-          "description": "Maximum completion tokens returned by LLM."
+          "default": 1000,
+          "description": "Maximum completion tokens returned by LLM. Set to 1000+ for reasoning models."
         },
         "aiCommit.timeoutSeconds": {
           "type": "integer",

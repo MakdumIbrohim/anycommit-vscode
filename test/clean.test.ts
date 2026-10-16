@@ -36,4 +36,12 @@ describe('cleanModelOutput', () => {
     const multiLine = 'feat: add user profile\n\n- Add profile avatar component\n- Hook up api endpoint';
     expect(cleanModelOutput(multiLine)).toBe(multiLine);
   });
+
+  it('strips reasoning/thinking tags from thinking models', () => {
+    const thought = '<think>\nAnalyzing changes in src/core/clean.ts...\nThe user added think tag removal.\n</think>\nfeat(core): strip thinking tags';
+    expect(cleanModelOutput(thought)).toBe('feat(core): strip thinking tags');
+
+    const unclosedThought = '<think>\nIncomplete reasoning stream...';
+    expect(cleanModelOutput(unclosedThought)).toBe('');
+  });
 });

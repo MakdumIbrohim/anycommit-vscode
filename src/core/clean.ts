@@ -5,6 +5,11 @@ export function cleanModelOutput(raw: string): string {
 
   let text = raw.trim();
 
+  // Strip reasoning / thinking tags (e.g. <think>...</think> from DeepSeek R1, Muse Spark, etc.)
+  text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+  text = text.replace(/<think>[\s\S]*$/gi, '').trim();
+  text = text.replace(/\[think\][\s\S]*?\[\/think\]/gi, '').trim();
+
   // Strip code block fences if wrapped in ``` ... ```
   const fenceRegex = /^```(?:[a-zA-Z0-9_-]+)?\r?\n([\s\S]*?)\r?\n```$/;
   const matchFence = text.match(fenceRegex);

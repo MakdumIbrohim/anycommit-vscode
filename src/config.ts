@@ -44,7 +44,7 @@ export function getAnyCommitConfig(): AnyCommitConfig {
     extraInstructions: cfg.get<string>('extraInstructions') || '',
     maxDiffChars: cfg.get<number>('maxDiffChars') ?? 20000,
     temperature: cfg.get<number>('temperature') ?? 0.2,
-    maxTokens: cfg.get<number>('maxTokens') ?? 400,
+    maxTokens: cfg.get<number>('maxTokens') ?? 1000,
     timeoutSeconds: cfg.get<number>('timeoutSeconds') ?? 60
   };
 }

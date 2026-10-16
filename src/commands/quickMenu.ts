@@ -1,0 +1,66 @@
+import * as vscode from 'vscode';
+import { getAnyCommitConfig } from '../config';
+
+interface QuickMenuItem extends vscode.QuickPickItem {
+  action: () => Promise<void> | void;
+}
+
+export async function handleShowQuickMenu(): Promise<void> {
+  const config = getAnyCommitConfig();
+  const currentProvider = config.provider;
+  const currentModel = config.model || 'None';
+
+  const items: QuickMenuItem[] = [
+    {
+      label: '$(symbol-parameter) Switch Model',
+      description: `Current: ${currentModel}`,
+      detail: `Fetch and select a model or combo from ${currentProvider}`,
+      action: async () => {
+        await vscode.commands.executeCommand('aiCommit.selectModel');
+      }
+    },
+    {
+      label: '$(server) Switch Provider',
+      description: `Current: ${currentProvider}`,
+      detail: 'Choose between 9router, OmniRoute, OpenAI, OpenRouter, Groq, DeepSeek, or Custom',
+      action: async () => {
+        await vscode.commands.executeCommand('aiCommit.selectProvider');
+      }
+    },
+    {
+      label: '$(key) Set API Key',
+      description: `For ${currentProvider}`,
+      detail: 'Store API key safely in VS Code SecretStorage',
+      action: async () => {
+        await vscode.commands.executeCommand('aiCommit.setApiKey');
+      }
+    },
+    {
+      label: '$(clear-all) Clear API Key',
+      description: `For ${currentProvider}`,
+      detail: 'Remove stored API key from SecretStorage',
+      action: async () => {
+        await vscode.commands.executeCommand('aiCommit.clearApiKey');
+      }
+    },
+    {
+      label: '$(gear) Extension Settings',
+      description: 'Open AnyCommit Settings',
+      detail: 'Configure style, language, ticket regex, diff limits, etc.',
+      action: async () => {
+        await vscode.commands.executeCommand(
+          'workbench.action.openSettings',
+          '@ext:makdumibrohim.anycommit'
+        );
+      }
+    }
+  ];
+
+  const picked = await vscode.window.showQuickPick(items, {
+    placeHolder: `AnyCommit (${currentProvider} · ${currentModel}) - Choose an action`
+  });
+
+  if (picked) {
+    await picked.action();
+  }
+}

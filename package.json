@@ -19,6 +19,10 @@
     "Other"
   ],
   "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:.git"
+  ],
   "extensionDependencies": [
     "vscode.git"
   ],
@@ -52,6 +56,10 @@
       {
         "command": "aiCommit.selectProvider",
         "title": "AI Commit: Select Provider"
+      },
+      {
+        "command": "aiCommit.showQuickMenu",
+        "title": "AI Commit: Show Quick Menu"
       }
     ],
     "menus": {

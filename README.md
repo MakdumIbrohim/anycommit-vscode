@@ -90,6 +90,7 @@ You can customize AnyCommit via VS Code Settings (`settings.json`):
 - `AI Commit: Regenerate Commit Message` (`aiCommit.regenerate`): Clears previous message and generates a fresh alternative.
 - `AI Commit: Select Provider` (`aiCommit.selectProvider`): Switch between presets or custom endpoints.
 - `AI Commit: Select Model` (`aiCommit.selectModel`): Fetch and choose from available models, with manual fallback.
+- `AI Commit: Show Quick Menu` (`aiCommit.showQuickMenu`): Open the interactive status bar menu to switch model, provider, or keys.
 - `AI Commit: Set API Key` (`aiCommit.setApiKey`): Safely store API key in VS Code SecretStorage.
 - `AI Commit: Clear API Key` (`aiCommit.clearApiKey`): Delete stored API key for the current provider.
 

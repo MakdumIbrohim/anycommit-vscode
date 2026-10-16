@@ -4,6 +4,7 @@ import { handleClearApiKey } from './clearApiKey';
 import { handleSelectProvider } from './selectProvider';
 import { handleSelectModel } from './selectModel';
 import { handleGenerate } from './generate';
+import { handleShowQuickMenu } from './quickMenu';
 
 export function registerCommands(context: vscode.ExtensionContext): void {
   const commands: Array<[string, (...args: any[]) => any]> = [
@@ -12,7 +13,8 @@ export function registerCommands(context: vscode.ExtensionContext): void {
     ['aiCommit.selectProvider', () => handleSelectProvider()],
     ['aiCommit.selectModel', () => handleSelectModel(context)],
     ['aiCommit.generate', () => handleGenerate(context)],
-    ['aiCommit.regenerate', () => handleGenerate(context, { isRegenerate: true })]
+    ['aiCommit.regenerate', () => handleGenerate(context, { isRegenerate: true })],
+    ['aiCommit.showQuickMenu', () => handleShowQuickMenu()]
   ];
 
   for (const [cmd, handler] of commands) {

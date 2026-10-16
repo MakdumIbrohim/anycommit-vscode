@@ -10,7 +10,8 @@ import {
   getGitApi,
   getActiveRepository,
   getDiffFromRepository,
-  setCommitMessage
+  setCommitMessage,
+  getRecentCommitMessages
 } from './git';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -256,10 +257,16 @@ export function activate(context: vscode.ExtensionContext) {
     const language = config.get<string>('language') || 'English';
     const style = (config.get<string>('style') as CommitStyle) || 'conventional';
     const includeBody = config.get<boolean>('includeBody') ?? false;
+    const useRecentCommits = config.get<boolean>('useRecentCommits') ?? true;
     const extraInstructions = config.get<string>('extraInstructions') || '';
     const temperature = config.get<number>('temperature') ?? 0.2;
     const maxTokens = config.get<number>('maxTokens') ?? 400;
     const timeoutSeconds = config.get<number>('timeoutSeconds') ?? 60;
+
+    let recentCommits: string[] | undefined;
+    if (useRecentCommits) {
+      recentCommits = await getRecentCommitMessages(repo, 5);
+    }
 
     const filteredDiff = filterAndTruncateDiff(diffResult.diff, maxDiffChars);
     const messages = buildMessages({
@@ -267,7 +274,8 @@ export function activate(context: vscode.ExtensionContext) {
       style,
       language,
       includeBody,
-      extraInstructions
+      extraInstructions,
+      recentCommits
     });
 
     await vscode.window.withProgress(

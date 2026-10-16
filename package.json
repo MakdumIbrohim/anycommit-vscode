@@ -115,6 +115,11 @@
           "default": false,
           "description": "Include detailed bullet points in the commit message body."
         },
+        "aiCommit.useRecentCommits": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include recent repository commits in the prompt as style and tone examples."
+        },
         "aiCommit.extraInstructions": {
           "type": "string",
           "default": "",

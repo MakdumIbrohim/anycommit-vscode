@@ -1,5 +1,9 @@
 import * as vscode from 'vscode';
 
+export interface CommitEntry {
+  message: string;
+}
+
 export interface Repository {
   rootUri: vscode.Uri;
   inputBox: {
@@ -9,6 +13,7 @@ export interface Repository {
     selected: boolean;
   };
   diff(cached?: boolean): Promise<string>;
+  log?(options?: { maxEntries?: number }): Promise<CommitEntry[]>;
 }
 
 export interface GitApi {
@@ -87,4 +92,27 @@ export async function getDiffFromRepository(
 
 export function setCommitMessage(repo: Repository, message: string): void {
   repo.inputBox.value = message;
+}
+
+export async function getRecentCommitMessages(
+  repo: Repository,
+  count: number = 5
+): Promise<string[]> {
+  if (!repo.log || typeof repo.log !== 'function') {
+    return [];
+  }
+  try {
+    const commits = await repo.log({ maxEntries: count });
+    if (!Array.isArray(commits)) {
+      return [];
+    }
+    return commits
+      .map((c) => {
+        const firstLine = c?.message?.split(/\r?\n/)[0]?.trim();
+        return firstLine || '';
+      })
+      .filter((msg) => msg.length > 0);
+  } catch {
+    return [];
+  }
 }

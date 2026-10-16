@@ -1,6 +1,7 @@
 {
   "name": "anycommit",
   "displayName": "AnyCommit: AI Commit Message",
+  "icon": "media/icon.png",
   "description": "Generate clean git commit messages from staged diff using OpenAI-compatible APIs, including local gateways like 9router and OmniRoute.",
   "version": "0.1.0",
   "publisher": "makdumibrohim",
@@ -18,6 +19,10 @@
     "Other"
   ],
   "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:.git"
+  ],
   "extensionDependencies": [
     "vscode.git"
   ],
@@ -26,7 +31,15 @@
       {
         "command": "aiCommit.generate",
         "title": "AI Commit: Generate Commit Message",
-        "icon": "$(sparkle)"
+        "icon": {
+          "light": "media/icon.png",
+          "dark": "media/icon.png"
+        }
+      },
+      {
+        "command": "aiCommit.regenerate",
+        "title": "AI Commit: Regenerate Commit Message",
+        "icon": "$(refresh)"
       },
       {
         "command": "aiCommit.setApiKey",
@@ -43,6 +56,10 @@
       {
         "command": "aiCommit.selectProvider",
         "title": "AI Commit: Select Provider"
+      },
+      {
+        "command": "aiCommit.showQuickMenu",
+        "title": "AI Commit: Show Quick Menu"
       }
     ],
     "menus": {
@@ -50,7 +67,12 @@
         {
           "command": "aiCommit.generate",
           "when": "scmProvider == git",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "aiCommit.regenerate",
+          "when": "scmProvider == git",
+          "group": "navigation@2"
         }
       ]
     },
@@ -84,6 +106,11 @@
           "type": "string",
           "default": "",
           "description": "Base URL override (e.g. http://localhost:20128/v1). Required for custom provider."
+        },
+        "aiCommit.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for the active provider. (Optional: If empty, uses secure SecretStorage)."
         },
         "aiCommit.model": {
           "type": "string",
@@ -120,6 +147,21 @@
           "default": true,
           "description": "Include recent repository commits in the prompt as style and tone examples."
         },
+        "aiCommit.autoDetectScope": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect commit scope from modified folder/file paths for Conventional Commits."
+        },
+        "aiCommit.extractTicketFromBranch": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically extract issue/ticket ID from the current git branch name and include it in the commit message."
+        },
+        "aiCommit.ticketPattern": {
+          "type": "string",
+          "default": "[A-Z]+-[0-9]+",
+          "description": "Regular expression pattern used to extract issue/ticket ID from branch name (e.g. [A-Z]+-[0-9]+ for JIRA/Linear, or (?:issue|gh)-[0-9]+)."
+        },
         "aiCommit.extraInstructions": {
           "type": "string",
           "default": "",
@@ -139,8 +181,8 @@
         },
         "aiCommit.maxTokens": {
           "type": "integer",
-          "default": 400,
-          "description": "Maximum completion tokens returned by LLM."
+          "default": 1000,
+          "description": "Maximum completion tokens returned by LLM. Set to 1000+ for reasoning models."
         },
         "aiCommit.timeoutSeconds": {
           "type": "integer",
@@ -155,12 +197,14 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "vitest run",
+    "format": "prettier --write .",
     "package": "vsce package --no-dependencies"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^2.24.0",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   }

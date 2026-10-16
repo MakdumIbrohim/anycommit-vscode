@@ -1,12 +1,4 @@
-const SENSITIVE_EXTENSIONS = new Set([
-  '.pem',
-  '.key',
-  '.pfx',
-  '.p12',
-  '.crt',
-  '.cert',
-  '.kdbx'
-]);
+const SENSITIVE_EXTENSIONS = new Set(['.pem', '.key', '.pfx', '.p12', '.crt', '.cert', '.kdbx']);
 
 const SENSITIVE_KEYWORDS = [
   'id_rsa',

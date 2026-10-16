@@ -16,7 +16,8 @@ export function normalizeBaseUrl(input: string): NormalizeUrlResult {
 
   let warning: string | undefined;
   if (!cleaned.endsWith('/v1')) {
-    warning = "Base URL does not end with '/v1'. Most OpenAI-compatible endpoints require a '/v1' path.";
+    warning =
+      "Base URL does not end with '/v1'. Most OpenAI-compatible endpoints require a '/v1' path.";
   }
 
   return { url: cleaned, warning };

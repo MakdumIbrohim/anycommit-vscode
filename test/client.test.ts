@@ -71,10 +71,7 @@ describe('LLM client', () => {
       });
 
       await expect(
-        chatComplete(
-          { baseUrl, model: 'm1', messages: [], retryDelayMs: 0 },
-          mockFetch as any
-        )
+        chatComplete({ baseUrl, model: 'm1', messages: [], retryDelayMs: 0 }, mockFetch as any)
       ).rejects.toThrow('API key missing or invalid.');
     });
 
@@ -86,10 +83,7 @@ describe('LLM client', () => {
       });
 
       await expect(
-        chatComplete(
-          { baseUrl, model: 'm1', messages: [], retryDelayMs: 0 },
-          mockFetch as any
-        )
+        chatComplete({ baseUrl, model: 'm1', messages: [], retryDelayMs: 0 }, mockFetch as any)
       ).rejects.toThrow('Model or endpoint not found (check base URL and model).');
     });
 
@@ -121,10 +115,7 @@ describe('LLM client', () => {
       const mockFetch = vi.fn().mockRejectedValue(new TypeError('fetch failed'));
 
       await expect(
-        chatComplete(
-          { baseUrl, model: 'm1', messages: [], retryDelayMs: 0 },
-          mockFetch as any
-        )
+        chatComplete({ baseUrl, model: 'm1', messages: [], retryDelayMs: 0 }, mockFetch as any)
       ).rejects.toThrow(
         'Cannot reach http://localhost:20128/v1. Is your gateway (9router/OmniRoute) running?'
       );
@@ -214,11 +205,7 @@ describe('LLM client', () => {
       const mockFetch = vi.fn().mockResolvedValue({
         ok: true,
         json: async () => ({
-          data: [
-            { id: 'premium-coding' },
-            { id: 'auto/best-coding' },
-            { id: 'openai/gpt-4o' }
-          ]
+          data: [{ id: 'premium-coding' }, { id: 'auto/best-coding' }, { id: 'openai/gpt-4o' }]
         })
       });
 
@@ -243,9 +230,9 @@ describe('LLM client', () => {
         json: async () => ({ models: [] })
       });
 
-      await expect(
-        listModels({ baseUrl, retryDelayMs: 0 }, mockFetch as any)
-      ).rejects.toThrow('Invalid response format: expected data array in models response');
+      await expect(listModels({ baseUrl, retryDelayMs: 0 }, mockFetch as any)).rejects.toThrow(
+        'Invalid response format: expected data array in models response'
+      );
     });
   });
 });

@@ -11,6 +11,7 @@ describe('prompt builder', () => {
     expect(messages[0].content).toContain('Conventional Commits');
     expect(messages[0].content).toContain('English');
     expect(messages[0].content).toContain('single line only');
+    expect(messages[0].content).toContain('Do NOT output <think>');
     expect(messages[1].role).toBe('user');
     expect(messages[1].content).toContain(dummyDiff);
   });
@@ -44,5 +45,33 @@ describe('prompt builder', () => {
     expect(messages[0].content).toContain('mention JIRA-123 in commit subject');
     expect(messages[0].content).toContain('- feat: initial commit');
     expect(messages[0].content).toContain('- fix: resolve bug');
+  });
+
+  it('includes ticket in instructions when provided', () => {
+    const conventionalMessages = buildMessages({
+      diff: dummyDiff,
+      style: 'conventional',
+      ticket: 'PROJ-123'
+    });
+    expect(conventionalMessages[0].content).toContain('PROJ-123');
+    expect(conventionalMessages[0].content).toContain('<type>(PROJ-123): <description>');
+
+    const plainMessages = buildMessages({
+      diff: dummyDiff,
+      style: 'plain',
+      ticket: 'PROJ-123'
+    });
+    expect(plainMessages[0].content).toContain('[PROJ-123]');
+  });
+
+  it('includes scope in conventional commits when provided', () => {
+    const messages = buildMessages({
+      diff: dummyDiff,
+      style: 'conventional',
+      scope: 'auth'
+    });
+    expect(messages[0].content).toContain(
+      'Use "auth" as the commit scope (e.g. "<type>(auth): <description>").'
+    );
   });
 });

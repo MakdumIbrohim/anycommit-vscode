@@ -12,6 +12,11 @@ export interface Repository {
   ui: {
     selected: boolean;
   };
+  state?: {
+    HEAD?: {
+      name?: string;
+    };
+  };
   diff(cached?: boolean): Promise<string>;
   log?(options?: { maxEntries?: number }): Promise<CommitEntry[]>;
 }
@@ -92,6 +97,10 @@ export async function getDiffFromRepository(
 
 export function setCommitMessage(repo: Repository, message: string): void {
   repo.inputBox.value = message;
+}
+
+export function getCurrentBranchName(repo: Repository): string | undefined {
+  return repo.state?.HEAD?.name;
 }
 
 export async function getRecentCommitMessages(

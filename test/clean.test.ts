@@ -8,7 +8,9 @@ describe('cleanModelOutput', () => {
   });
 
   it('keeps clean message as is', () => {
-    expect(cleanModelOutput('feat(auth): add login endpoint')).toBe('feat(auth): add login endpoint');
+    expect(cleanModelOutput('feat(auth): add login endpoint')).toBe(
+      'feat(auth): add login endpoint'
+    );
   });
 
   it('removes code fence blocks', () => {
@@ -21,9 +23,13 @@ describe('cleanModelOutput', () => {
 
   it('removes common prefixes', () => {
     expect(cleanModelOutput('Commit message: feat: add new feature')).toBe('feat: add new feature');
-    expect(cleanModelOutput('Commit: fix(api): resolve 500 error')).toBe('fix(api): resolve 500 error');
+    expect(cleanModelOutput('Commit: fix(api): resolve 500 error')).toBe(
+      'fix(api): resolve 500 error'
+    );
     expect(cleanModelOutput('Subject: chore: update deps')).toBe('chore: update deps');
-    expect(cleanModelOutput('Generated commit message: feat: support sse')).toBe('feat: support sse');
+    expect(cleanModelOutput('Generated commit message: feat: support sse')).toBe(
+      'feat: support sse'
+    );
   });
 
   it('removes wrapping quotes', () => {
@@ -33,7 +39,17 @@ describe('cleanModelOutput', () => {
   });
 
   it('preserves multi-line commit message with body', () => {
-    const multiLine = 'feat: add user profile\n\n- Add profile avatar component\n- Hook up api endpoint';
+    const multiLine =
+      'feat: add user profile\n\n- Add profile avatar component\n- Hook up api endpoint';
     expect(cleanModelOutput(multiLine)).toBe(multiLine);
+  });
+
+  it('strips reasoning/thinking tags from thinking models', () => {
+    const thought =
+      '<think>\nAnalyzing changes in src/core/clean.ts...\nThe user added think tag removal.\n</think>\nfeat(core): strip thinking tags';
+    expect(cleanModelOutput(thought)).toBe('feat(core): strip thinking tags');
+
+    const unclosedThought = '<think>\nIncomplete reasoning stream...';
+    expect(cleanModelOutput(unclosedThought)).toBe('');
   });
 });

@@ -5,7 +5,9 @@ describe('url', () => {
   describe('normalizeBaseUrl', () => {
     it('removes trailing slashes', () => {
       expect(normalizeBaseUrl('http://localhost:20128/v1/').url).toBe('http://localhost:20128/v1');
-      expect(normalizeBaseUrl('http://localhost:20128/v1///').url).toBe('http://localhost:20128/v1');
+      expect(normalizeBaseUrl('http://localhost:20128/v1///').url).toBe(
+        'http://localhost:20128/v1'
+      );
     });
 
     it('warns if url does not end with /v1', () => {

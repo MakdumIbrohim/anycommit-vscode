@@ -12,8 +12,8 @@ export async function handleSelectProvider(): Promise<void> {
     detail: p.isLocal
       ? 'Local gateway · API key optional'
       : p.requiresApiKey
-      ? 'Cloud provider · API key required'
-      : 'Custom endpoint',
+        ? 'Cloud provider · API key required'
+        : 'Custom endpoint',
     id: p.id
   }));
 

@@ -24,7 +24,8 @@ export function buildMessages(options: BuildPromptOptions): ChatMessage[] {
   const systemInstructions: string[] = [
     'You are an expert developer assistant specialized in generating concise, clear git commit messages from git diffs.',
     `Respond in ${language}.`,
-    'Output ONLY the commit message text. Do not wrap in markdown code blocks (no ```). Do not include any prefix like "Commit message:" or conversational greetings.'
+    'Output ONLY the commit message text. Do not wrap in markdown code blocks (no ```). Do not include any prefix like "Commit message:" or conversational greetings.',
+    'CRITICAL: Do NOT output <think>, <thinking>, or any internal reasoning tags. Do NOT explain your thought process. Jump straight to the final commit message in the very first token.'
   ];
 
   if (style === 'conventional') {
@@ -81,7 +82,9 @@ export function buildMessages(options: BuildPromptOptions): ChatMessage[] {
       .filter((c) => c !== '-')
       .join('\n');
     if (formattedCommits) {
-      systemInstructions.push(`Recent commits in this repository for style and tone reference:\n${formattedCommits}`);
+      systemInstructions.push(
+        `Recent commits in this repository for style and tone reference:\n${formattedCommits}`
+      );
     }
   }
 

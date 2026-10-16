@@ -26,11 +26,13 @@ describe('git helper', () => {
 
   it('extracts first lines of recent commits', async () => {
     const mockRepo: Partial<Repository> = {
-      log: vi.fn().mockResolvedValue([
-        { message: 'feat: first commit\n\nDetailed body' },
-        { message: 'fix(core): second commit' },
-        { message: 'chore: update deps\n- bullet point' }
-      ])
+      log: vi
+        .fn()
+        .mockResolvedValue([
+          { message: 'feat: first commit\n\nDetailed body' },
+          { message: 'fix(core): second commit' },
+          { message: 'chore: update deps\n- bullet point' }
+        ])
     };
 
     const commits = await getRecentCommitMessages(mockRepo as Repository, 5);

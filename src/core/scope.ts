@@ -9,12 +9,7 @@ const COMMON_WRAPPER_DIRS = new Set([
   '__tests__'
 ]);
 
-const ROOT_DOCS_FILES = new Set([
-  'readme.md',
-  'changelog.md',
-  'contributing.md',
-  'license'
-]);
+const ROOT_DOCS_FILES = new Set(['readme.md', 'changelog.md', 'contributing.md', 'license']);
 
 export function extractFilePathsFromDiff(diff: string): string[] {
   if (!diff || !diff.trim()) {
@@ -92,11 +87,7 @@ export function detectScopeFromFiles(filePaths: string[]): string | undefined {
   // Filter out pure docs/ignore files if other substantive code files exist
   const substantive = filePaths.filter((p) => {
     const lower = p.toLowerCase();
-    return (
-      !ROOT_DOCS_FILES.has(lower) &&
-      !lower.endsWith('.md') &&
-      !lower.endsWith('.gitignore')
-    );
+    return !ROOT_DOCS_FILES.has(lower) && !lower.endsWith('.md') && !lower.endsWith('.gitignore');
   });
 
   const targetList = substantive.length > 0 ? substantive : filePaths;

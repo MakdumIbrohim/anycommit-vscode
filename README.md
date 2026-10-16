@@ -19,9 +19,10 @@
 
 ## Why AnyCommit?
 
-Most commit message generators lock you into a single vendor, require costly subscriptions, or leak your code through closed third-party cloud servers. 
+Most commit message generators lock you into a single vendor, require costly subscriptions, or leak your code through closed third-party cloud servers.
 
 **AnyCommit** gives you complete freedom:
+
 - **Use Any Model**: Connect to local gateways like **9router** or **OmniRoute** to route across 15+ providers (Claude, GPT, Gemini, DeepSeek, Qwen) with zero configuration.
 - **Privacy & Security First**: Diffs are sent strictly to your chosen endpoint (direct localhost or your own key). Secrets (`.env*`, private keys, lockfiles) are filtered before transmission.
 - **Ultra Lightweight**: Zero runtime dependencies. Fast, clean TypeScript built on native Node.js fetch and Web Streams.
@@ -45,9 +46,10 @@ Most commit message generators lock you into a single vendor, require costly sub
 
 ## Quick Start
 
-### 1. Local Gateways (9router / OmniRoute) — *No API Key Required!*
+### 1. Local Gateways (9router / OmniRoute) — _No API Key Required!_
 
 #### Using 9router (Recommended for multi-model routing)
+
 1. Start 9router in your terminal:
    ```bash
    npx 9router
@@ -57,6 +59,7 @@ Most commit message generators lock you into a single vendor, require costly sub
 4. Stage your changes (`git add`), then click the **AnyCommit icon** in the Source Control panel!
 
 #### Using OmniRoute
+
 1. Start OmniRoute:
    ```bash
    npm install -g omniroute
@@ -88,38 +91,38 @@ Most commit message generators lock you into a single vendor, require costly sub
 
 Customize AnyCommit to match your team conventions in VS Code Settings (`Ctrl+,` > search **AnyCommit**):
 
-| Setting | Default | Description |
-| :--- | :--- | :--- |
-| `aiCommit.provider` | `"9router"` | Active provider preset (`9router`, `omniroute`, `openai`, `openrouter`, `groq`, `deepseek`, `custom`). |
-| `aiCommit.baseUrl` | `""` | Override base URL (e.g. `http://localhost:20128/v1`). Required for `custom` provider. |
-| `aiCommit.apiKey` | `""` | Optional: API key in settings. If left blank, uses encrypted `SecretStorage`. |
-| `aiCommit.model` | `""` | Model or combo ID (e.g. `premium-coding`, `gpt-4o`, `auto/best-coding`). |
-| `aiCommit.style` | `"conventional"` | Format style: `conventional` (`feat(scope): msg`), `gitmoji`, or `plain`. |
-| `aiCommit.autoDetectScope` | `true` | Automatically detect commit scope from modified folder/file paths. |
-| `aiCommit.extractTicketFromBranch` | `false` | Automatically extract ticket ID from current git branch name. |
-| `aiCommit.ticketPattern` | `"[A-Z]+-[0-9]+"` | Regex pattern used to extract ticket ID from branch name. |
-| `aiCommit.language` | `"English"` | Language for generated commit messages (e.g. `English`, `Indonesian`). |
-| `aiCommit.includeBody` | `false` | Include detailed bullet points body below the commit subject line. |
-| `aiCommit.useRecentCommits` | `true` | Feed 5 recent repository commits to the prompt to learn your project's tone. |
-| `aiCommit.extraInstructions` | `""` | Custom prompt instructions (e.g. "always reference GitHub issue numbers"). |
-| `aiCommit.maxDiffChars` | `20000` | Maximum character length of git diff sent to LLM. |
-| `aiCommit.temperature` | `0.2` | Sampling temperature (0.0 to 2.0). |
-| `aiCommit.maxTokens` | `1000` | Maximum token limit (1000+ ensures reasoning models don't truncate). |
-| `aiCommit.timeoutSeconds` | `60` | Request timeout in seconds (includes automatic retry on network errors). |
+| Setting                            | Default           | Description                                                                                            |
+| :--------------------------------- | :---------------- | :----------------------------------------------------------------------------------------------------- |
+| `aiCommit.provider`                | `"9router"`       | Active provider preset (`9router`, `omniroute`, `openai`, `openrouter`, `groq`, `deepseek`, `custom`). |
+| `aiCommit.baseUrl`                 | `""`              | Override base URL (e.g. `http://localhost:20128/v1`). Required for `custom` provider.                  |
+| `aiCommit.apiKey`                  | `""`              | Optional: API key in settings. If left blank, uses encrypted `SecretStorage`.                          |
+| `aiCommit.model`                   | `""`              | Model or combo ID (e.g. `premium-coding`, `gpt-4o`, `auto/best-coding`).                               |
+| `aiCommit.style`                   | `"conventional"`  | Format style: `conventional` (`feat(scope): msg`), `gitmoji`, or `plain`.                              |
+| `aiCommit.autoDetectScope`         | `true`            | Automatically detect commit scope from modified folder/file paths.                                     |
+| `aiCommit.extractTicketFromBranch` | `false`           | Automatically extract ticket ID from current git branch name.                                          |
+| `aiCommit.ticketPattern`           | `"[A-Z]+-[0-9]+"` | Regex pattern used to extract ticket ID from branch name.                                              |
+| `aiCommit.language`                | `"English"`       | Language for generated commit messages (e.g. `English`, `Indonesian`).                                 |
+| `aiCommit.includeBody`             | `false`           | Include detailed bullet points body below the commit subject line.                                     |
+| `aiCommit.useRecentCommits`        | `true`            | Feed 5 recent repository commits to the prompt to learn your project's tone.                           |
+| `aiCommit.extraInstructions`       | `""`              | Custom prompt instructions (e.g. "always reference GitHub issue numbers").                             |
+| `aiCommit.maxDiffChars`            | `20000`           | Maximum character length of git diff sent to LLM.                                                      |
+| `aiCommit.temperature`             | `0.2`             | Sampling temperature (0.0 to 2.0).                                                                     |
+| `aiCommit.maxTokens`               | `1000`            | Maximum token limit (1000+ ensures reasoning models don't truncate).                                   |
+| `aiCommit.timeoutSeconds`          | `60`              | Request timeout in seconds (includes automatic retry on network errors).                               |
 
 ---
 
 ## Available Commands
 
-| Command | Identifier | Description |
-| :--- | :--- | :--- |
-| **Generate Commit Message** | `aiCommit.generate` | Generates a commit message from staged changes. |
-| **Regenerate Commit Message** | `aiCommit.regenerate` | Clears previous draft and generates a fresh alternative. |
-| **Show Quick Menu** | `aiCommit.showQuickMenu` | Opens the status bar menu to switch model, provider, or settings. |
-| **Select Model** | `aiCommit.selectModel` | Fetches available models from endpoint with manual input fallback. |
-| **Select Provider** | `aiCommit.selectProvider` | Switches active provider preset. |
-| **Set API Key** | `aiCommit.setApiKey` | Safely stores provider API key in encrypted SecretStorage. |
-| **Clear API Key** | `aiCommit.clearApiKey` | Clears saved API key for the current provider. |
+| Command                       | Identifier                | Description                                                        |
+| :---------------------------- | :------------------------ | :----------------------------------------------------------------- |
+| **Generate Commit Message**   | `aiCommit.generate`       | Generates a commit message from staged changes.                    |
+| **Regenerate Commit Message** | `aiCommit.regenerate`     | Clears previous draft and generates a fresh alternative.           |
+| **Show Quick Menu**           | `aiCommit.showQuickMenu`  | Opens the status bar menu to switch model, provider, or settings.  |
+| **Select Model**              | `aiCommit.selectModel`    | Fetches available models from endpoint with manual input fallback. |
+| **Select Provider**           | `aiCommit.selectProvider` | Switches active provider preset.                                   |
+| **Set API Key**               | `aiCommit.setApiKey`      | Safely stores provider API key in encrypted SecretStorage.         |
+| **Clear API Key**             | `aiCommit.clearApiKey`    | Clears saved API key for the current provider.                     |
 
 ---
 
@@ -134,6 +137,7 @@ Customize AnyCommit to match your team conventions in VS Code Settings (`Ctrl+,`
 ## Remote, SSH, and WSL Notes
 
 In remote development environments (Remote-SSH, WSL, Dev Containers), extensions run on the **remote machine**:
+
 - If your 9router or OmniRoute gateway is running on your **local laptop**, `http://localhost:20128` inside the remote workspace will point to the remote host.
 - **Solution**:
   1. Forward port `20128` in VS Code's **Ports** tab, or

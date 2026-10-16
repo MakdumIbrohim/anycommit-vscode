@@ -31,10 +31,7 @@ export async function setApiKey(
   }
 }
 
-export async function clearApiKey(
-  secrets: SecretStorageLike,
-  provider: string
-): Promise<void> {
+export async function clearApiKey(secrets: SecretStorageLike, provider: string): Promise<void> {
   const secretKey = formatSecretKey(provider);
   await secrets.delete(secretKey);
 }

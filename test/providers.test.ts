@@ -16,7 +16,9 @@ describe('providers', () => {
 
   it('prefers override when provided', () => {
     expect(resolveBaseUrl('9router', 'http://127.0.0.1:3000/v1')).toBe('http://127.0.0.1:3000/v1');
-    expect(resolveBaseUrl('custom', 'https://my-gateway.internal/v1')).toBe('https://my-gateway.internal/v1');
+    expect(resolveBaseUrl('custom', 'https://my-gateway.internal/v1')).toBe(
+      'https://my-gateway.internal/v1'
+    );
   });
 
   it('returns empty string for custom provider without override', () => {

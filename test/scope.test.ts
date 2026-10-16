@@ -12,10 +12,7 @@ diff --git a/src/auth/session.ts b/src/auth/session.ts
 --- a/src/auth/session.ts
 +++ b/src/auth/session.ts`;
 
-      expect(extractFilePathsFromDiff(diff)).toEqual([
-        'src/auth/login.ts',
-        'src/auth/session.ts'
-      ]);
+      expect(extractFilePathsFromDiff(diff)).toEqual(['src/auth/login.ts', 'src/auth/session.ts']);
     });
 
     it('returns empty array for empty diff', () => {

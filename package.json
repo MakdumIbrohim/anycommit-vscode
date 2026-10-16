@@ -197,12 +197,14 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "vitest run",
+    "format": "prettier --write .",
     "package": "vsce package --no-dependencies"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^2.24.0",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
   }

@@ -17,7 +17,10 @@ export function cleanModelOutput(raw: string): string {
     text = matchFence[1].trim();
   } else {
     // Strip trailing or leading partial fences
-    text = text.replace(/^```[a-zA-Z0-9_-]*\r?\n?/, '').replace(/\r?\n?```$/, '').trim();
+    text = text
+      .replace(/^```[a-zA-Z0-9_-]*\r?\n?/, '')
+      .replace(/\r?\n?```$/, '')
+      .trim();
   }
 
   // Strip common conversational prefixes like "Commit message:", "Commit:", etc.

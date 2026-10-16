@@ -106,11 +106,7 @@ async function executeWithTimeoutAndRetry<T>(
           await delay(retryDelay);
           continue;
         }
-        throw new LlmClientError(
-          `Request timed out after ${timeoutSeconds}s.`,
-          undefined,
-          true
-        );
+        throw new LlmClientError(`Request timed out after ${timeoutSeconds}s.`, undefined, true);
       }
 
       if (err instanceof LlmClientError) {

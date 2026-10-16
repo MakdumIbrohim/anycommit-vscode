@@ -1,9 +1,6 @@
 const DEFAULT_TICKET_PATTERN = '[a-zA-Z]+-[0-9]+';
 
-export function extractTicket(
-  branchName?: string,
-  pattern?: string
-): string | undefined {
+export function extractTicket(branchName?: string, pattern?: string): string | undefined {
   if (!branchName || !branchName.trim()) {
     return undefined;
   }

@@ -157,6 +157,7 @@ export async function handleGenerate(
 
       let accumulated = '';
       let rawResult = '';
+      let isReasoning = false;
 
       try {
         rawResult = await chatCompleteStream({
@@ -173,6 +174,12 @@ export async function handleGenerate(
             const liveCleaned = cleanModelOutput(accumulated);
             if (liveCleaned) {
               setCommitMessage(repo, liveCleaned);
+            } else if (
+              !isReasoning &&
+              (accumulated.includes('<think>') || accumulated.includes('[think]'))
+            ) {
+              isReasoning = true;
+              _progress.report({ message: 'Thinking...' });
             }
           }
         });
@@ -211,16 +218,19 @@ export async function handleGenerate(
 
       try {
         const cleaned = cleanModelOutput(rawResult);
-        setCommitMessage(repo, cleaned);
+        if (cleaned) {
+          setCommitMessage(repo, cleaned);
+        } else {
+          vscode.window.showWarningMessage(
+            'AnyCommit: Model returned an empty commit message. It may have exhausted token limit while reasoning. Try increasing aiCommit.maxTokens in settings.'
+          );
+        }
       } catch (err: any) {
         if (controller.signal.aborted) {
           vscode.window.showInformationMessage('AnyCommit: Generation cancelled.');
           return;
         }
-        if (
-          err?.message?.includes('API key missing or invalid') ||
-          err?.statusCode === 401
-        ) {
+        if (err?.message?.includes('API key missing or invalid') || err?.statusCode === 401) {
           const action = await vscode.window.showErrorMessage(
             `AnyCommit: ${err.message}`,
             'Set API Key'

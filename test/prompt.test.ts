@@ -11,6 +11,7 @@ describe('prompt builder', () => {
     expect(messages[0].content).toContain('Conventional Commits');
     expect(messages[0].content).toContain('English');
     expect(messages[0].content).toContain('single line only');
+    expect(messages[0].content).toContain('Do NOT output <think>');
     expect(messages[1].role).toBe('user');
     expect(messages[1].content).toContain(dummyDiff);
   });
@@ -69,6 +70,8 @@ describe('prompt builder', () => {
       style: 'conventional',
       scope: 'auth'
     });
-    expect(messages[0].content).toContain('Use "auth" as the commit scope (e.g. "<type>(auth): <description>").');
+    expect(messages[0].content).toContain(
+      'Use "auth" as the commit scope (e.g. "<type>(auth): <description>").'
+    );
   });
 });

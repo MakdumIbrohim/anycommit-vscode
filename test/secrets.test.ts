@@ -1,5 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getApiKey, setApiKey, clearApiKey, resolveApiKey, formatSecretKey, SecretStorageLike } from '../src/secrets';
+import {
+  getApiKey,
+  setApiKey,
+  clearApiKey,
+  resolveApiKey,
+  formatSecretKey,
+  SecretStorageLike
+} from '../src/secrets';
 
 class MockSecretStorage implements SecretStorageLike {
   private storage = new Map<string, string>();

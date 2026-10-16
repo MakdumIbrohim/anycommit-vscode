@@ -6,7 +6,7 @@ import { buildMessages, CommitStyle } from './core/prompt';
 import { extractTicket } from './core/branch';
 import { cleanModelOutput } from './core/clean';
 import { chatCompleteStream, listModels } from './core/client';
-import { getApiKey, setApiKey, clearApiKey } from './secrets';
+import { getApiKey, setApiKey, clearApiKey, resolveApiKey } from './secrets';
 import {
   getGitApi,
   getActiveRepository,
@@ -105,7 +105,11 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    const apiKey = await getApiKey(context.secrets, provider);
+    const apiKey = await resolveApiKey(
+      context.secrets,
+      provider,
+      config.get<string>('apiKey')
+    );
 
     let models: string[] = [];
     try {
@@ -243,7 +247,11 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     const preset = PROVIDER_PRESETS[provider as ProviderId];
-    const apiKey = await getApiKey(context.secrets, provider);
+    const apiKey = await resolveApiKey(
+      context.secrets,
+      provider,
+      config.get<string>('apiKey')
+    );
     if (preset?.requiresApiKey && !apiKey) {
       const action = await vscode.window.showErrorMessage(
         `AnyCommit: Provider "${provider}" requires an API key.`,
@@ -321,6 +329,19 @@ export function activate(context: vscode.ExtensionContext) {
         } catch (err: any) {
           if (controller.signal.aborted) {
             vscode.window.showInformationMessage('AnyCommit: Generation cancelled.');
+            return;
+          }
+          if (
+            err?.message?.includes('API key missing or invalid') ||
+            err?.statusCode === 401
+          ) {
+            const action = await vscode.window.showErrorMessage(
+              `AnyCommit: ${err.message}`,
+              'Set API Key'
+            );
+            if (action === 'Set API Key') {
+              await vscode.commands.executeCommand('aiCommit.setApiKey');
+            }
             return;
           }
           vscode.window.showErrorMessage(`AnyCommit: ${err.message}`);

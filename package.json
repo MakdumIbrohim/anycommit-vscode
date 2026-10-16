@@ -85,6 +85,11 @@
           "default": "",
           "description": "Base URL override (e.g. http://localhost:20128/v1). Required for custom provider."
         },
+        "aiCommit.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key for the active provider. (Optional: If empty, uses secure SecretStorage)."
+        },
         "aiCommit.model": {
           "type": "string",
           "default": "",

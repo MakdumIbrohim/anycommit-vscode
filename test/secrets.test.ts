@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { getApiKey, setApiKey, clearApiKey, formatSecretKey, SecretStorageLike } from '../src/secrets';
+import { getApiKey, setApiKey, clearApiKey, resolveApiKey, formatSecretKey, SecretStorageLike } from '../src/secrets';
 
 class MockSecretStorage implements SecretStorageLike {
   private storage = new Map<string, string>();
@@ -55,5 +55,22 @@ describe('secrets storage', () => {
     expect(await getApiKey(mockStorage, 'openai')).toBe('key-openai');
     expect(await getApiKey(mockStorage, 'groq')).toBe('key-groq');
     expect(await getApiKey(mockStorage, '9router')).toBeUndefined();
+  });
+
+  describe('resolveApiKey', () => {
+    it('prioritizes settingsApiKey if provided', async () => {
+      await setApiKey(mockStorage, 'openai', 'secret-storage-key');
+      const resolved = await resolveApiKey(mockStorage, 'openai', 'settings-key');
+      expect(resolved).toBe('settings-key');
+    });
+
+    it('falls back to SecretStorage if settingsApiKey is empty', async () => {
+      await setApiKey(mockStorage, 'openai', 'secret-storage-key');
+      const resolved = await resolveApiKey(mockStorage, 'openai', '  ');
+      expect(resolved).toBe('secret-storage-key');
+
+      const resolvedUndefined = await resolveApiKey(mockStorage, 'openai', undefined);
+      expect(resolvedUndefined).toBe('secret-storage-key');
+    });
   });
 });

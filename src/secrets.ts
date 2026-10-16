@@ -38,3 +38,15 @@ export async function clearApiKey(
   const secretKey = formatSecretKey(provider);
   await secrets.delete(secretKey);
 }
+
+export async function resolveApiKey(
+  secrets: SecretStorageLike,
+  provider: string,
+  settingsApiKey?: string
+): Promise<string | undefined> {
+  const fromSettings = settingsApiKey?.trim();
+  if (fromSettings) {
+    return fromSettings;
+  }
+  return await getApiKey(secrets, provider);
+}

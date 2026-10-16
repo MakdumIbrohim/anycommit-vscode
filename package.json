@@ -3,7 +3,7 @@
   "displayName": "AnyCommit: AI Commit Message",
   "description": "Generate clean git commit messages from staged diff using OpenAI-compatible APIs, including local gateways like 9router and OmniRoute.",
   "version": "0.1.0",
-  "publisher": "REPLACE_ME",
+  "publisher": "makdumibrohim",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -30,6 +30,11 @@
         "icon": "$(sparkle)"
       },
       {
+        "command": "aiCommit.regenerate",
+        "title": "AI Commit: Regenerate Commit Message",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "aiCommit.setApiKey",
         "title": "AI Commit: Set API Key"
       },
@@ -51,7 +56,12 @@
         {
           "command": "aiCommit.generate",
           "when": "scmProvider == git",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "aiCommit.regenerate",
+          "when": "scmProvider == git",
+          "group": "navigation@2"
         }
       ]
     },

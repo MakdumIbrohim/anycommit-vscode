@@ -87,6 +87,7 @@ You can customize AnyCommit via VS Code Settings (`settings.json`):
 ## Commands
 
 - `AI Commit: Generate Commit Message` (`aiCommit.generate`): Generates message from staged diff.
+- `AI Commit: Regenerate Commit Message` (`aiCommit.regenerate`): Clears previous message and generates a fresh alternative.
 - `AI Commit: Select Provider` (`aiCommit.selectProvider`): Switch between presets or custom endpoints.
 - `AI Commit: Select Model` (`aiCommit.selectModel`): Fetch and choose from available models, with manual fallback.
 - `AI Commit: Set API Key` (`aiCommit.setApiKey`): Safely store API key in VS Code SecretStorage.

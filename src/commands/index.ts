@@ -11,7 +11,8 @@ export function registerCommands(context: vscode.ExtensionContext): void {
     ['aiCommit.clearApiKey', () => handleClearApiKey(context)],
     ['aiCommit.selectProvider', () => handleSelectProvider()],
     ['aiCommit.selectModel', () => handleSelectModel(context)],
-    ['aiCommit.generate', () => handleGenerate(context)]
+    ['aiCommit.generate', () => handleGenerate(context)],
+    ['aiCommit.regenerate', () => handleGenerate(context, { isRegenerate: true })]
   ];
 
   for (const [cmd, handler] of commands) {

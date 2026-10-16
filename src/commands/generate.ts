@@ -18,7 +18,14 @@ import {
   getCurrentBranchName
 } from '../git';
 
-export async function handleGenerate(context: vscode.ExtensionContext): Promise<void> {
+export interface GenerateOptions {
+  isRegenerate?: boolean;
+}
+
+export async function handleGenerate(
+  context: vscode.ExtensionContext,
+  options?: GenerateOptions
+): Promise<void> {
   const gitApi = getGitApi();
   if (!gitApi) {
     vscode.window.showErrorMessage('AnyCommit: Git extension is not available.');
@@ -127,10 +134,21 @@ export async function handleGenerate(context: vscode.ExtensionContext): Promise<
     scope
   });
 
+  if (options?.isRegenerate) {
+    setCommitMessage(repo, '');
+  }
+
+  const effectiveTemperature = options?.isRegenerate
+    ? Math.min(1.0, Number((temperature + 0.2).toFixed(2)))
+    : temperature;
+  const progressTitle = options?.isRegenerate
+    ? 'Regenerating commit message...'
+    : 'Generating commit message...';
+
   await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.SourceControl,
-      title: 'Generating commit message...',
+      title: progressTitle,
       cancellable: true
     },
     async (_progress, token) => {
@@ -144,7 +162,7 @@ export async function handleGenerate(context: vscode.ExtensionContext): Promise<
           apiKey,
           model,
           messages,
-          temperature,
+          temperature: effectiveTemperature,
           maxTokens,
           timeoutSeconds,
           signal: controller.signal,

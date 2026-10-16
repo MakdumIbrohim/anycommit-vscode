@@ -1,5 +1,7 @@
-export type ProviderId =
+export type BuiltinProviderId =
   '9router' | 'omniroute' | 'openai' | 'openrouter' | 'groq' | 'deepseek' | 'custom';
+
+export type ProviderId = BuiltinProviderId | string;
 
 export interface ProviderPreset {
   id: ProviderId;
@@ -9,7 +11,14 @@ export interface ProviderPreset {
   requiresApiKey: boolean;
 }
 
-export const PROVIDER_PRESETS: Record<ProviderId, ProviderPreset> = {
+export interface CustomProviderConfig {
+  id: string;
+  name: string;
+  baseUrl: string;
+  isLocal?: boolean;
+}
+
+export const PROVIDER_PRESETS: Record<BuiltinProviderId, ProviderPreset> = {
   '9router': {
     id: '9router',
     name: '9router',
@@ -54,18 +63,32 @@ export const PROVIDER_PRESETS: Record<ProviderId, ProviderPreset> = {
   },
   custom: {
     id: 'custom',
-    name: 'Custom',
+    name: 'Custom Endpoint',
     defaultBaseUrl: '',
     isLocal: false,
     requiresApiKey: false
   }
 };
 
-export function resolveBaseUrl(provider: string, override?: string): string {
+export function resolveBaseUrl(
+  provider: string,
+  override?: string,
+  customProviders?: CustomProviderConfig[]
+): string {
   const trimmed = override?.trim();
   if (trimmed) {
     return trimmed;
   }
-  const preset = PROVIDER_PRESETS[provider as ProviderId];
+
+  if (customProviders && Array.isArray(customProviders)) {
+    const matched = customProviders.find(
+      (cp) => cp && cp.id && cp.id.toLowerCase() === provider.toLowerCase()
+    );
+    if (matched && matched.baseUrl?.trim()) {
+      return matched.baseUrl.trim();
+    }
+  }
+
+  const preset = PROVIDER_PRESETS[provider as BuiltinProviderId];
   return preset ? preset.defaultBaseUrl : '';
 }

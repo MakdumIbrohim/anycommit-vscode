@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getAnyCommitConfig } from '../config';
-import { PROVIDER_PRESETS } from '../core/providers';
+import { BuiltinProviderId, PROVIDER_PRESETS } from '../core/providers';
 import { normalizeBaseUrl, isNonLocalhostHttp } from '../core/url';
 import { filterAndTruncateDiff } from '../core/diff';
 import { buildMessages } from '../core/prompt';
@@ -92,7 +92,7 @@ export async function handleGenerate(
     return;
   }
 
-  const preset = PROVIDER_PRESETS[provider];
+  const preset = PROVIDER_PRESETS[provider as BuiltinProviderId];
   const apiKey = await resolveApiKey(context.secrets, provider, settingsApiKey);
   if (preset?.requiresApiKey && !apiKey) {
     const action = await vscode.window.showErrorMessage(

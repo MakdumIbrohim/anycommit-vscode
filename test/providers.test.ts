@@ -14,6 +14,15 @@ describe('providers', () => {
     expect(resolveBaseUrl('deepseek')).toBe('https://api.deepseek.com/v1');
   });
 
+  it('resolves baseUrl from customProviders list', () => {
+    const customList = [
+      { id: 'ollama', name: 'Ollama Local', baseUrl: 'http://localhost:11434/v1' },
+      { id: 'lmstudio', name: 'LM Studio', baseUrl: 'http://127.0.0.1:1234/v1' }
+    ];
+    expect(resolveBaseUrl('ollama', undefined, customList)).toBe('http://localhost:11434/v1');
+    expect(resolveBaseUrl('LMSTUDIO', undefined, customList)).toBe('http://127.0.0.1:1234/v1');
+  });
+
   it('prefers override when provided', () => {
     expect(resolveBaseUrl('9router', 'http://127.0.0.1:3000/v1')).toBe('http://127.0.0.1:3000/v1');
     expect(resolveBaseUrl('custom', 'https://my-gateway.internal/v1')).toBe(

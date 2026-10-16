@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import { CommitStyle } from './core/prompt';
-import { ProviderId, resolveBaseUrl } from './core/providers';
+import { CustomProviderConfig, ProviderId, resolveBaseUrl } from './core/providers';
 
 export interface AnyCommitConfig {
   provider: ProviderId;
   baseUrl: string;
   resolvedBaseUrl: string;
+  customProviders: CustomProviderConfig[];
   apiKey?: string;
   model: string;
   language: string;
@@ -26,12 +27,14 @@ export function getAnyCommitConfig(): AnyCommitConfig {
   const cfg = vscode.workspace.getConfiguration('aiCommit');
   const provider = (cfg.get<string>('provider') || '9router') as ProviderId;
   const baseUrl = cfg.get<string>('baseUrl') || '';
-  const resolvedBaseUrl = resolveBaseUrl(provider, baseUrl);
+  const customProviders = cfg.get<CustomProviderConfig[]>('customProviders') || [];
+  const resolvedBaseUrl = resolveBaseUrl(provider, baseUrl, customProviders);
 
   return {
     provider,
     baseUrl,
     resolvedBaseUrl,
+    customProviders,
     apiKey: cfg.get<string>('apiKey')?.trim() || undefined,
     model: cfg.get<string>('model')?.trim() || '',
     language: cfg.get<string>('language') || 'English',

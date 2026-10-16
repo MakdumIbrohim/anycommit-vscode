@@ -22,7 +22,7 @@ export async function handleShowQuickMenu(): Promise<void> {
     {
       label: '$(server) Switch Provider',
       description: `Current: ${currentProvider}`,
-      detail: 'Choose between 9router, OmniRoute, OpenAI, OpenRouter, Groq, DeepSeek, or Custom',
+      detail: 'Choose between local gateways, cloud providers, or custom endpoints',
       action: async () => {
         await vscode.commands.executeCommand('aiCommit.selectProvider');
       }

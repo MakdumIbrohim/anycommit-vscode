@@ -27,7 +27,8 @@
 AnyCommit connects your git workflow to OpenAI-compatible endpoints directly from VS Code. It reads staged changes via the native Git extension, generates commit messages using your configured model, and streams the output directly into the Source Control input box.
 
 - **Local Gateway First**: Pre-configured presets for **9router** and **OmniRoute** (`http://localhost:20128/v1`). Authentication is optional for local instances.
-- **Provider Presets**: Works with OpenAI, OpenRouter, Groq, DeepSeek, and custom base URLs.
+- **Custom Model Providers**: Configure any OpenAI-compatible provider (Ollama, LM Studio, vLLM, LocalAI, or corporate gateways) with custom names and base URLs.
+- **Provider Presets**: Out-of-the-box support for OpenAI, OpenRouter, Groq, DeepSeek, and custom base URLs.
 - **Smart Formatting**: Supports Conventional Commits, Gitmoji, and Plain imperative styles. Infers scope from directory paths and extracts ticket IDs from branch names.
 - **Diff Sanitation**: Filters out lockfiles, binaries, and sensitive files (`.env*`, private keys, certificates) before making requests.
 - **Zero Runtime Dependencies**: Written in TypeScript using native Node.js fetch and Web Streams.
@@ -76,24 +77,25 @@ AnyCommit connects your git workflow to OpenAI-compatible endpoints directly fro
 
 All options are configurable in VS Code Settings (`Ctrl+,` > search **AnyCommit**):
 
-| Setting                            | Default           | Description                                                                                            |
-| :--------------------------------- | :---------------- | :----------------------------------------------------------------------------------------------------- |
-| `aiCommit.provider`                | `"9router"`       | Active provider preset (`9router`, `omniroute`, `openai`, `openrouter`, `groq`, `deepseek`, `custom`). |
-| `aiCommit.baseUrl`                 | `""`              | Override base URL (e.g. `http://localhost:20128/v1`). Required for `custom` provider.                  |
-| `aiCommit.apiKey`                  | `""`              | API key. If left blank, AnyCommit reads from encrypted `SecretStorage`.                                |
-| `aiCommit.model`                   | `""`              | Model or combo ID (e.g. `premium-coding`, `gpt-4o`).                                                   |
-| `aiCommit.style`                   | `"conventional"`  | Commit format: `conventional`, `gitmoji`, or `plain`.                                                  |
-| `aiCommit.autoDetectScope`         | `true`            | In Conventional Commits mode, infer scope from modified directory paths.                               |
-| `aiCommit.extractTicketFromBranch` | `false`           | Extract ticket identifier from the current git branch name.                                            |
-| `aiCommit.ticketPattern`           | `"[A-Z]+-[0-9]+"` | Regular expression used to extract ticket IDs from branch names.                                       |
-| `aiCommit.language`                | `"English"`       | Language for generated commit messages (e.g. `English`, `Indonesian`).                                 |
-| `aiCommit.includeBody`             | `false`           | Include detailed bullet points below the commit subject line.                                          |
-| `aiCommit.useRecentCommits`        | `true`            | Include recent commits in prompt as style and tone examples.                                           |
-| `aiCommit.extraInstructions`       | `""`              | Custom prompt instructions (e.g. "always reference PR number").                                        |
-| `aiCommit.maxDiffChars`            | `20000`           | Maximum character length of git diff sent to LLM.                                                      |
-| `aiCommit.temperature`             | `0.2`             | Sampling temperature (0.0 to 2.0).                                                                     |
-| `aiCommit.maxTokens`               | `1000`            | Maximum completion tokens.                                                                             |
-| `aiCommit.timeoutSeconds`          | `60`              | Request timeout in seconds.                                                                            |
+| Setting                            | Default           | Description                                                                                         |
+| :--------------------------------- | :---------------- | :-------------------------------------------------------------------------------------------------- |
+| `aiCommit.provider`                | `"9router"`       | Active provider ID (preset or ID from `aiCommit.customProviders`).                                  |
+| `aiCommit.customProviders`         | `[]`              | Array of custom OpenAI-compatible providers (`[{ "id": "...", "name": "...", "baseUrl": "..." }]`). |
+| `aiCommit.baseUrl`                 | `""`              | Override base URL (e.g. `http://localhost:20128/v1`). Required for `custom` provider.               |
+| `aiCommit.apiKey`                  | `""`              | API key. If left blank, AnyCommit reads from encrypted `SecretStorage`.                             |
+| `aiCommit.model`                   | `""`              | Model or combo ID (e.g. `premium-coding`, `gpt-4o`).                                                |
+| `aiCommit.style`                   | `"conventional"`  | Commit format: `conventional`, `gitmoji`, or `plain`.                                               |
+| `aiCommit.autoDetectScope`         | `true`            | In Conventional Commits mode, infer scope from modified directory paths.                            |
+| `aiCommit.extractTicketFromBranch` | `false`           | Extract ticket identifier from the current git branch name.                                         |
+| `aiCommit.ticketPattern`           | `"[A-Z]+-[0-9]+"` | Regular expression used to extract ticket IDs from branch names.                                    |
+| `aiCommit.language`                | `"English"`       | Language for generated commit messages (e.g. `English`, `Indonesian`).                              |
+| `aiCommit.includeBody`             | `false`           | Include detailed bullet points below the commit subject line.                                       |
+| `aiCommit.useRecentCommits`        | `true`            | Include recent commits in prompt as style and tone examples.                                        |
+| `aiCommit.extraInstructions`       | `""`              | Custom prompt instructions (e.g. "always reference PR number").                                     |
+| `aiCommit.maxDiffChars`            | `20000`           | Maximum character length of git diff sent to LLM.                                                   |
+| `aiCommit.temperature`             | `0.2`             | Sampling temperature (0.0 to 2.0).                                                                  |
+| `aiCommit.maxTokens`               | `1000`            | Maximum completion tokens.                                                                          |
+| `aiCommit.timeoutSeconds`          | `60`              | Request timeout in seconds.                                                                         |
 
 ---
 

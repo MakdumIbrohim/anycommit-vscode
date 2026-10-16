@@ -2,7 +2,7 @@
   "name": "anycommit",
   "displayName": "AnyCommit: AI Commit Message",
   "icon": "media/icon.png",
-  "description": "Generate clean git commit messages from staged diff using OpenAI-compatible APIs, including local gateways like 9router and OmniRoute.",
+  "description": "Generate clean git commit messages from staged diff using OpenAI-compatible APIs, including local gateways (9router, OmniRoute, Ollama, LM Studio) and custom model providers.",
   "version": "0.1.0",
   "publisher": "makdumibrohim",
   "license": "MIT",
@@ -82,25 +82,34 @@
         "aiCommit.provider": {
           "type": "string",
           "default": "9router",
-          "enum": [
-            "9router",
-            "omniroute",
-            "openai",
-            "openrouter",
-            "groq",
-            "deepseek",
-            "custom"
-          ],
-          "enumDescriptions": [
-            "Local 9router gateway (default http://localhost:20128/v1)",
-            "Local OmniRoute gateway (default http://localhost:20128/v1)",
-            "OpenAI official API (https://api.openai.com/v1)",
-            "OpenRouter API (https://openrouter.ai/api/v1)",
-            "Groq API (https://api.groq.com/openai/v1)",
-            "DeepSeek API (https://api.deepseek.com/v1)",
-            "Custom OpenAI-compatible endpoint"
-          ],
-          "description": "AI provider preset or custom endpoint."
+          "description": "Active AI provider ID (built-in preset like 9router, omniroute, openai, openrouter, groq, deepseek, custom, or any custom provider ID from aiCommit.customProviders)."
+        },
+        "aiCommit.customProviders": {
+          "type": "array",
+          "default": [],
+          "description": "List of custom OpenAI-compatible model providers (e.g. Ollama, LM Studio, vLLM, or private gateways).",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "baseUrl"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique provider identifier (e.g. 'ollama', 'lmstudio')."
+              },
+              "name": {
+                "type": "string",
+                "description": "Display name shown in UI."
+              },
+              "baseUrl": {
+                "type": "string",
+                "description": "OpenAI-compatible base URL (e.g. 'http://localhost:11434/v1')."
+              }
+            }
+          }
         },
         "aiCommit.baseUrl": {
           "type": "string",

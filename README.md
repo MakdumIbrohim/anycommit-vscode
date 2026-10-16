@@ -138,4 +138,4 @@ In remote workspaces (Remote-SSH, WSL, Dev Containers), extensions run on the re
 
 ## License
 
-MIT &copy; 2026 MakdumIbrohim.
+MIT &copy; 2026 [MakdumIbrohim](https://github.com/MakdumIbrohim).

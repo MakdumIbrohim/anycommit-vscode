@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { chatComplete, listModels, LlmClientError } from '../src/core/client';
+import { chatComplete, chatCompleteStream, listModels, LlmClientError } from '../src/core/client';
 
 describe('LLM client', () => {
   const baseUrl = 'http://localhost:20128/v1';
@@ -152,6 +152,60 @@ describe('LLM client', () => {
       ).rejects.toThrow('Request was cancelled.');
 
       expect(mockFetch).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('chatCompleteStream', () => {
+    it('streams tokens through onToken callback and returns full text', async () => {
+      const ssePayload = [
+        'data: {"choices":[{"delta":{"content":"feat: "}}]}\n\n',
+        'data: {"choices":[{"delta":{"content":"support streaming"}}]}\n\n',
+        'data: [DONE]\n\n'
+      ].join('');
+
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () => ssePayload
+      });
+
+      const tokens: string[] = [];
+      const result = await chatCompleteStream(
+        {
+          baseUrl,
+          model: 'm1',
+          messages: [],
+          onToken: (t) => tokens.push(t),
+          retryDelayMs: 0
+        },
+        mockFetch as any
+      );
+
+      expect(tokens).toEqual(['feat: ', 'support streaming']);
+      expect(result).toBe('feat: support streaming');
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+      const [, init] = mockFetch.mock.calls[0];
+      expect(JSON.parse(init.body).stream).toBe(true);
+    });
+
+    it('propagates 401 and 404 errors during stream initiation', async () => {
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 401,
+        json: async () => ({ error: { message: 'Unauthorized' } })
+      });
+
+      await expect(
+        chatCompleteStream(
+          {
+            baseUrl,
+            model: 'm1',
+            messages: [],
+            onToken: () => {},
+            retryDelayMs: 0
+          },
+          mockFetch as any
+        )
+      ).rejects.toThrow('API key missing or invalid.');
     });
   });
 

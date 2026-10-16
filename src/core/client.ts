@@ -1,5 +1,6 @@
 import { normalizeBaseUrl } from './url';
 import { ChatMessage } from './prompt';
+import { SseStreamParser } from './sse';
 
 export interface ChatCompleteOptions {
   baseUrl: string;
@@ -11,6 +12,10 @@ export interface ChatCompleteOptions {
   timeoutSeconds?: number;
   signal?: AbortSignal;
   retryDelayMs?: number;
+}
+
+export interface ChatCompleteStreamOptions extends ChatCompleteOptions {
+  onToken: (token: string) => void;
 }
 
 export interface ListModelsOptions {
@@ -200,6 +205,106 @@ export async function chatComplete(
       }
 
       return content;
+    },
+    {
+      baseUrl: options.baseUrl,
+      timeoutSeconds: options.timeoutSeconds,
+      userSignal: options.signal,
+      retryDelayMs: options.retryDelayMs
+    }
+  );
+}
+
+export async function chatCompleteStream(
+  options: ChatCompleteStreamOptions,
+  fetchFn: FetchFn = fetch
+): Promise<string> {
+  const cleanUrl = normalizeBaseUrl(options.baseUrl).url;
+  if (!cleanUrl) {
+    throw new LlmClientError('Base URL is not configured.', undefined, false);
+  }
+
+  const endpoint = `${cleanUrl}/chat/completions`;
+  const headers = buildHeaders(options.apiKey);
+  headers['Accept'] = 'text/event-stream';
+
+  const payload = {
+    model: options.model,
+    messages: options.messages,
+    temperature: options.temperature ?? 0.2,
+    max_tokens: options.maxTokens ?? 400,
+    stream: true
+  };
+
+  return executeWithTimeoutAndRetry(
+    async (signal) => {
+      const res = await fetchFn(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+        signal
+      });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          throw new LlmClientError('API key missing or invalid.', 401, false);
+        }
+        if (res.status === 404) {
+          throw new LlmClientError(
+            'Model or endpoint not found (check base URL and model).',
+            404,
+            false
+          );
+        }
+
+        const isTransient = isTransientStatus(res.status);
+        let errorMsg = `Request failed with status ${res.status}.`;
+        try {
+          const body = (await res.json()) as any;
+          if (body?.error?.message) {
+            errorMsg = body.error.message;
+          }
+        } catch {
+          // ignore
+        }
+        throw new LlmClientError(errorMsg, res.status, isTransient);
+      }
+
+      let fullText = '';
+      const parser = new SseStreamParser((delta) => {
+        fullText += delta;
+        options.onToken(delta);
+      });
+
+      if (res.body && typeof (res.body as any).getReader === 'function') {
+        const reader = (res.body as ReadableStream<Uint8Array>).getReader();
+        const decoder = new TextDecoder();
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              break;
+            }
+            if (value) {
+              parser.feed(decoder.decode(value, { stream: true }));
+            }
+          }
+        } finally {
+          reader.releaseLock();
+        }
+      } else if (res.body && Symbol.asyncIterator in (res.body as any)) {
+        const decoder = new TextDecoder();
+        for await (const chunk of res.body as any) {
+          const text = typeof chunk === 'string' ? chunk : decoder.decode(chunk, { stream: true });
+          parser.feed(text);
+        }
+      } else {
+        const text = await res.text();
+        parser.feed(text);
+      }
+
+      parser.finish();
+      return fullText;
     },
     {
       baseUrl: options.baseUrl,

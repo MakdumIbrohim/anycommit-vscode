@@ -4,7 +4,7 @@ import { normalizeBaseUrl, isNonLocalhostHttp } from './core/url';
 import { filterAndTruncateDiff } from './core/diff';
 import { buildMessages, CommitStyle } from './core/prompt';
 import { cleanModelOutput } from './core/clean';
-import { chatComplete, listModels } from './core/client';
+import { chatCompleteStream, listModels } from './core/client';
 import { getApiKey, setApiKey, clearApiKey } from './secrets';
 import {
   getGitApi,
@@ -280,8 +280,9 @@ export function activate(context: vscode.ExtensionContext) {
         const controller = new AbortController();
         token.onCancellationRequested(() => controller.abort());
 
+        let accumulated = '';
         try {
-          const rawResult = await chatComplete({
+          const rawResult = await chatCompleteStream({
             baseUrl,
             apiKey,
             model,
@@ -289,13 +290,18 @@ export function activate(context: vscode.ExtensionContext) {
             temperature,
             maxTokens,
             timeoutSeconds,
-            signal: controller.signal
+            signal: controller.signal,
+            onToken: (tokenDelta) => {
+              accumulated += tokenDelta;
+              setCommitMessage(repo, accumulated);
+            }
           });
 
           const cleaned = cleanModelOutput(rawResult);
           setCommitMessage(repo, cleaned);
         } catch (err: any) {
           if (controller.signal.aborted) {
+            vscode.window.showInformationMessage('AnyCommit: Generation cancelled.');
             return;
           }
           vscode.window.showErrorMessage(`AnyCommit: ${err.message}`);

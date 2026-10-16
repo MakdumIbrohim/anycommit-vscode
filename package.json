@@ -126,6 +126,11 @@
           "default": true,
           "description": "Include recent repository commits in the prompt as style and tone examples."
         },
+        "aiCommit.autoDetectScope": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect commit scope from modified folder/file paths for Conventional Commits."
+        },
         "aiCommit.extractTicketFromBranch": {
           "type": "boolean",
           "default": false,

@@ -12,6 +12,7 @@ export interface AnyCommitConfig {
   style: CommitStyle;
   includeBody: boolean;
   useRecentCommits: boolean;
+  autoDetectScope: boolean;
   extractTicketFromBranch: boolean;
   ticketPattern: string;
   extraInstructions: string;
@@ -37,6 +38,7 @@ export function getAnyCommitConfig(): AnyCommitConfig {
     style: (cfg.get<string>('style') as CommitStyle) || 'conventional',
     includeBody: cfg.get<boolean>('includeBody') ?? false,
     useRecentCommits: cfg.get<boolean>('useRecentCommits') ?? true,
+    autoDetectScope: cfg.get<boolean>('autoDetectScope') ?? true,
     extractTicketFromBranch: cfg.get<boolean>('extractTicketFromBranch') ?? false,
     ticketPattern: cfg.get<string>('ticketPattern') || '[A-Z]+-[0-9]+',
     extraInstructions: cfg.get<string>('extraInstructions') || '',

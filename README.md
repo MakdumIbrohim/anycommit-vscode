@@ -73,6 +73,7 @@ You can customize AnyCommit via VS Code Settings (`settings.json`):
 | `aiCommit.style` | `"conventional"` | Commit style format: `conventional`, `gitmoji`, or `plain`. |
 | `aiCommit.includeBody` | `false` | Include detailed bullet points body below the commit subject. |
 | `aiCommit.useRecentCommits` | `true` | Include recent repository commits as tone and style examples. |
+| `aiCommit.autoDetectScope` | `true` | Automatically detect commit scope from modified folder/file paths. |
 | `aiCommit.extractTicketFromBranch` | `false` | Automatically extract ticket ID from current git branch name. |
 | `aiCommit.ticketPattern` | `"[A-Z]+-[0-9]+"` | Regex pattern used to extract ticket ID from branch name. |
 | `aiCommit.extraInstructions` | `""` | Custom prompt instructions (e.g. "include issue ticket from branch name"). |

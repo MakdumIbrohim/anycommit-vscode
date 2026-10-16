@@ -13,6 +13,7 @@ export interface BuildPromptOptions {
   extraInstructions?: string;
   recentCommits?: string[];
   ticket?: string;
+  scope?: string;
 }
 
 export function buildMessages(options: BuildPromptOptions): ChatMessage[] {
@@ -61,6 +62,13 @@ export function buildMessages(options: BuildPromptOptions): ChatMessage[] {
         `Include the issue/ticket ID "${trimmedTicket}" in the subject line (e.g. "[${trimmedTicket}] <description>").`
       );
     }
+  }
+
+  if (options.scope && options.scope.trim() && style === 'conventional' && !options.ticket) {
+    const trimmedScope = options.scope.trim().toLowerCase();
+    systemInstructions.push(
+      `Use "${trimmedScope}" as the commit scope (e.g. "<type>(${trimmedScope}): <description>").`
+    );
   }
 
   if (options.extraInstructions && options.extraInstructions.trim()) {

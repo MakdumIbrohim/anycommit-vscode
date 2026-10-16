@@ -62,4 +62,13 @@ describe('prompt builder', () => {
     });
     expect(plainMessages[0].content).toContain('[PROJ-123]');
   });
+
+  it('includes scope in conventional commits when provided', () => {
+    const messages = buildMessages({
+      diff: dummyDiff,
+      style: 'conventional',
+      scope: 'auth'
+    });
+    expect(messages[0].content).toContain('Use "auth" as the commit scope (e.g. "<type>(auth): <description>").');
+  });
 });

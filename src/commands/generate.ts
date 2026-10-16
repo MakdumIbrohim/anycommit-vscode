@@ -5,6 +5,7 @@ import { normalizeBaseUrl, isNonLocalhostHttp } from '../core/url';
 import { filterAndTruncateDiff } from '../core/diff';
 import { buildMessages } from '../core/prompt';
 import { extractTicket } from '../core/branch';
+import { extractFilePathsFromDiff, detectScopeFromFiles } from '../core/scope';
 import { cleanModelOutput } from '../core/clean';
 import { chatCompleteStream } from '../core/client';
 import { resolveApiKey } from '../secrets';
@@ -108,6 +109,12 @@ export async function handleGenerate(context: vscode.ExtensionContext): Promise<
     ticket = extractTicket(branchName, ticketPattern);
   }
 
+  let scope: string | undefined;
+  if (config.autoDetectScope && !ticket && style === 'conventional') {
+    const filePaths = extractFilePathsFromDiff(diffResult.diff);
+    scope = detectScopeFromFiles(filePaths);
+  }
+
   const filteredDiff = filterAndTruncateDiff(diffResult.diff, maxDiffChars);
   const messages = buildMessages({
     diff: filteredDiff,
@@ -116,7 +123,8 @@ export async function handleGenerate(context: vscode.ExtensionContext): Promise<
     includeBody,
     extraInstructions,
     recentCommits,
-    ticket
+    ticket,
+    scope
   });
 
   await vscode.window.withProgress(

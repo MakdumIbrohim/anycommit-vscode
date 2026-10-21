@@ -39,7 +39,10 @@
       {
         "command": "aiCommit.regenerate",
         "title": "AI Commit: Regenerate Commit Message",
-        "icon": "$(refresh)"
+        "icon": {
+          "light": "media/commit-regenerate-light.svg",
+          "dark": "media/commit-regenerate-dark.svg"
+        }
       },
       {
         "command": "aiCommit.setApiKey",

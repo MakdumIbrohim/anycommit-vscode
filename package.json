@@ -32,8 +32,8 @@
         "command": "aiCommit.generate",
         "title": "AI Commit: Generate Commit Message",
         "icon": {
-          "light": "media/icon.png",
-          "dark": "media/icon.png"
+          "light": "media/commit-ai-light.svg",
+          "dark": "media/commit-ai-dark.svg"
         }
       },
       {

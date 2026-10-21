@@ -5,6 +5,7 @@ import { handleSelectProvider } from './selectProvider';
 import { handleSelectModel } from './selectModel';
 import { handleGenerate } from './generate';
 import { handleShowQuickMenu } from './quickMenu';
+import { AnyCommitSettingsPanel } from '../views/settingsWebview';
 
 export function registerCommands(context: vscode.ExtensionContext): void {
   const commands: Array<[string, (...args: any[]) => any]> = [
@@ -14,7 +15,8 @@ export function registerCommands(context: vscode.ExtensionContext): void {
     ['aiCommit.selectModel', () => handleSelectModel(context)],
     ['aiCommit.generate', () => handleGenerate(context)],
     ['aiCommit.regenerate', () => handleGenerate(context, { isRegenerate: true })],
-    ['aiCommit.showQuickMenu', () => handleShowQuickMenu()]
+    ['aiCommit.showQuickMenu', () => handleShowQuickMenu()],
+    ['aiCommit.openSettings', () => AnyCommitSettingsPanel.createOrShow(context)]
   ];
 
   for (const [cmd, handler] of commands) {

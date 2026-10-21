@@ -60,6 +60,10 @@
       {
         "command": "aiCommit.showQuickMenu",
         "title": "AI Commit: Show Quick Menu"
+      },
+      {
+        "command": "aiCommit.openSettings",
+        "title": "AI Commit: Open Settings Dashboard"
       }
     ],
     "menus": {

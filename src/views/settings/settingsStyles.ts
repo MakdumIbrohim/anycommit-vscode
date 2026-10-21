@@ -15,8 +15,6 @@ export function getSettingsStyles(): string {
       --btn-sec-hover: var(--vscode-button-secondaryHoverBackground);
       --card-border: var(--vscode-widget-border, rgba(128, 128, 128, 0.25));
       --desc-fg: var(--vscode-descriptionForeground);
-      --badge-bg: var(--vscode-badge-background, rgba(255, 255, 255, 0.08));
-      --badge-fg: var(--vscode-badge-foreground, var(--vscode-foreground));
       --success-fg: var(--vscode-testing-iconPassed, #4ec9b0);
       --error-fg: var(--vscode-errorForeground, #f14c4c);
     }
@@ -31,24 +29,11 @@ export function getSettingsStyles(): string {
       line-height: 1.5;
     }
 
-    /* Header & Metrics Banner */
+    /* Header */
     .header-container { margin-bottom: 24px; }
     .title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
     .title-row h1 { margin: 0; font-size: 22px; font-weight: 600; }
     .subtitle { font-size: 13px; color: var(--desc-fg); margin-top: 4px; }
-    .metric-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    .metric-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      font-size: 11px;
-      border-radius: 12px;
-      background: var(--badge-bg);
-      color: var(--badge-fg);
-      border: 1px solid var(--card-border);
-    }
-    .metric-chip svg { width: 13px; height: 13px; fill: currentColor; }
 
     /* Card Container */
     .card {
@@ -79,7 +64,21 @@ export function getSettingsStyles(): string {
     /* Form Elements */
     .field { margin-bottom: 18px; }
     .field:last-child { margin-bottom: 0; }
-    label { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 12.5px; margin-bottom: 6px; }
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 12.5px;
+      margin-bottom: 6px;
+    }
+    label svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
     .help { font-size: 11.5px; color: var(--desc-fg); margin-top: 5px; }
     select, input[type="text"], input[type="password"] {
       width: 100%;

@@ -7,7 +7,10 @@ export function renderModelCard(config: any): string {
       </div>
 
       <div class="field">
-        <label for="modelSelect">Target Model Name / Combo ID</label>
+        <label for="modelSelect">
+          <svg viewBox="0 0 16 16"><path d="M8 1L2 5v6l6 4 6-4V5L8 1zm0 2.2L12.5 6 8 8.8 3.5 6 8 3.2z"/></svg>
+          <span>Target Model Name / Combo ID</span>
+        </label>
         <div class="input-button-group">
           <input type="text" id="modelSelect" value="${config.model || ''}" placeholder="e.g. premium-coding, cc/claude-opus-4-6, gpt-4o" />
           <button id="fetchModelsBtn" class="secondary" type="button">

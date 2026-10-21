@@ -7,7 +7,10 @@ export function renderConventionsCard(config: any): string {
       </div>
 
       <div class="field">
-        <label for="styleSelect">Commit Format Style</label>
+        <label for="styleSelect">
+          <svg viewBox="0 0 16 16"><path d="M5.5 1v4m0 6v4m0-7a3 3 0 100-6 3 3 0 000 6z"/></svg>
+          <span>Commit Format Style</span>
+        </label>
         <select id="styleSelect">
           <option value="conventional" ${config.style === 'conventional' ? 'selected' : ''}>Conventional Commits (e.g. feat(auth): add login validation)</option>
           <option value="gitmoji" ${config.style === 'gitmoji' ? 'selected' : ''}>Gitmoji Convention (e.g. :sparkles: add authentication)</option>
@@ -16,7 +19,10 @@ export function renderConventionsCard(config: any): string {
       </div>
 
       <div class="field">
-        <label for="languageInput">Commit Language</label>
+        <label for="languageInput">
+          <svg viewBox="0 0 16 16"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zM2.05 8a5.96 5.96 0 01.35-2h2.24c-.09.65-.14 1.32-.14 2 0 .68.05 1.35.14 2H2.4a5.96 5.96 0 01-.35-2zm3.89 0c0-.67.06-1.34.16-2h3.8c.1.66.16 1.33.16 2 0 .67-.06 1.34-.16 2h-3.8c-.1-.66-.16-1.33-.16-2z"/></svg>
+          <span>Commit Language</span>
+        </label>
         <input type="text" id="languageInput" value="${config.language || 'English'}" placeholder="English, Indonesian, etc." />
       </div>
 

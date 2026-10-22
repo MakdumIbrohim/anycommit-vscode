@@ -50,7 +50,7 @@ AnyCommit connects your git workflow to OpenAI-compatible endpoints directly fro
 
 ### Cloud Providers
 
-1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run `AI Commit: Select Provider`.
+1. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) and run `AI Commit: Select Provider` (or launch `AI Commit: Open Settings Dashboard` for full visual setup).
 2. Choose your provider: **OpenAI**, **OpenRouter**, **Groq**, **DeepSeek**, or **Custom**.
 3. Set your API key:
    - Run `AI Commit: Set API Key` to store it in VS Code `SecretStorage`, or
@@ -61,6 +61,7 @@ AnyCommit connects your git workflow to OpenAI-compatible endpoints directly fro
 
 ## Features
 
+- **Settings Dashboard UI**: Visual configuration webview (`AI Commit: Open Settings Dashboard`) with live endpoint model discovery and dynamic AI provider icon branding (ChatGPT, Claude, Gemini, DeepSeek, LLaMA, Qwen, Mistral).
 - **Streaming Output**: Tokens stream directly into the commit input box with full cancellation support.
 - **Regenerate Button**: Click the refresh button in the SCM title bar to clear the previous message and generate an alternative with higher sampling temperature.
 - **Smart Scope Detection**: In Conventional Commits mode, automatically infers scope from modified subdirectories (e.g., changes to `src/auth/*` produce `feat(auth): ...`).
@@ -103,6 +104,7 @@ All options are configurable in VS Code Settings (`Ctrl+,` > search **AnyCommit*
 | `aiCommit.generate`       | **AI Commit: Generate Commit Message**   | Generate a commit message from staged changes.                  |
 | `aiCommit.regenerate`     | **AI Commit: Regenerate Commit Message** | Clear draft and generate an alternative message.                |
 | `aiCommit.showQuickMenu`  | **AI Commit: Show Quick Menu**           | Open the interactive menu to switch model, provider, or keys.   |
+| `aiCommit.openSettings`   | **AI Commit: Open Settings Dashboard**   | Open the visual settings dashboard webview.                     |
 | `aiCommit.selectModel`    | **AI Commit: Select Model**              | Query `/models` endpoint to pick a model, with manual fallback. |
 | `aiCommit.selectProvider` | **AI Commit: Select Provider**           | Switch active provider preset.                                  |
 | `aiCommit.setApiKey`      | **AI Commit: Set API Key**               | Store API key in encrypted SecretStorage.                       |

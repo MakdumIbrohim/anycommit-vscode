@@ -2,13 +2,13 @@ export function renderModelCard(config: any): string {
   return /* html */ `
     <div class="card">
       <div class="card-header">
-        <svg viewBox="0 0 16 16"><path d="M8 1L2 5v6l6 4 6-4V5L8 1zm0 2.2L12.5 6 8 8.8 3.5 6 8 3.2zM3 7.2l4.5 2.8v4.5L3 11.7V7.2zm10 4.5l-4.5 2.8v-4.5L13 7.2v4.5z"/></svg>
+        <svg viewBox="0 0 16 16"><path d="M14 5V3.5A1.5 1.5 0 0012.5 2H11V1H9v1H7V1H5v1H3.5A1.5 1.5 0 002 3.5V5H1v2h1v2H1v2h1v1.5A1.5 1.5 0 003.5 14H5v1h2v-1h2v1h2v-1h1.5a1.5 1.5 0 001.5-1.5V11h1V9h-1V7h1V5h-1zm-1 6.5a.5.5 0 01-.5.5h-9a.5.5 0 01-.5-.5v-7a.5.5 0 01.5-.5h9a.5.5 0 01.5.5v7zM5 5h6v6H5V5z"/></svg>
         <h2>Model Selection</h2>
       </div>
 
       <div class="field">
         <label for="modelSelect">
-          <svg viewBox="0 0 16 16"><path d="M8 1L2 5v6l6 4 6-4V5L8 1zm0 2.2L12.5 6 8 8.8 3.5 6 8 3.2z"/></svg>
+          <svg viewBox="0 0 16 16"><path d="M7.5 1l1.2 3.8 3.8 1.2-3.8 1.2L7.5 11 6.3 7.2 2.5 6l3.8-1.2L7.5 1zm5 8l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/></svg>
           <span>Target Model Name / Combo ID</span>
         </label>
         <div class="input-button-group">

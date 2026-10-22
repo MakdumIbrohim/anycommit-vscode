@@ -6,7 +6,7 @@ export function renderProviderCard(config: any, currentApiKey: string): string {
   return /* html */ `
     <div class="card">
       <div class="card-header">
-        <svg viewBox="0 0 16 16"><path d="M2 3h12v3H2V3zm0 4h12v3H2V7zm0 4h12v3H2v-3z"/></svg>
+        <svg viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 012.5 1h11A1.5 1.5 0 0115 2.5v2A1.5 1.5 0 0113.5 6h-11A1.5 1.5 0 011 4.5v-2zm1.5-.5a.5.5 0 00-.5.5v2a.5.5 0 00.5.5h11a.5.5 0 00.5-.5v-2a.5.5 0 00-.5-.5h-11zm-1.5 8A1.5 1.5 0 012.5 9h11a1.5 1.5 0 011.5 1.5v2a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 011 12.5v-2zm1.5-.5a.5.5 0 00-.5.5v2a.5.5 0 00.5.5h11a.5.5 0 00.5-.5v-2a.5.5 0 00-.5-.5h-11zM4 3.5a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 7a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/></svg>
         <h2>Provider Configuration</h2>
       </div>
 

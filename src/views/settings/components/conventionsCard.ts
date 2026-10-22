@@ -2,7 +2,7 @@ export function renderConventionsCard(config: any): string {
   return /* html */ `
     <div class="card">
       <div class="card-header">
-        <svg viewBox="0 0 16 16"><path d="M4 1.5h8l3 3v10H1v-13h3zm0 1H2v11h12V5h-2.5V2.5H4zm6 0v2H12l-2-2z"/></svg>
+        <svg viewBox="0 0 16 16"><path d="M4 1.5h8l3 3v10H1v-13h3zm0 1H2v11h12V5h-2.5V2.5H4zm6 0v2H12l-2-2zM4 6h8v1H4V6zm0 3h8v1H4V9zm0 3h5v1H4v-1z"/></svg>
         <h2>Commit Conventions & Formatting</h2>
       </div>
 

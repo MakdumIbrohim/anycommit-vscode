@@ -7,9 +7,6 @@ describe('providers', () => {
     expect(resolveBaseUrl('anycommit', 'https://openrouter.ai/api/v1')).toBe(
       'https://anycommit-gateway.vercel.app/v1'
     );
-    expect(
-      resolveBaseUrl('anycommit', 'https://anycommit-gateway.makdumibrohim3.workers.dev/v1')
-    ).toBe('https://anycommit-gateway.vercel.app/v1');
     expect(PROVIDER_PRESETS.anycommit.requiresApiKey).toBe(false);
   });
 

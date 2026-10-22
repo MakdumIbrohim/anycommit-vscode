@@ -91,11 +91,7 @@ export function resolveBaseUrl(
 ): string {
   const trimmed = override?.trim();
   if (provider === 'anycommit') {
-    if (
-      !trimmed ||
-      trimmed === 'https://openrouter.ai/api/v1' ||
-      trimmed.includes('workers.dev')
-    ) {
+    if (!trimmed || trimmed === 'https://openrouter.ai/api/v1') {
       return PROVIDER_PRESETS.anycommit.defaultBaseUrl;
     }
   }

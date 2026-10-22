@@ -2,6 +2,13 @@
 
 All notable changes to the "anycommit" extension will be documented in this file.
 
+## [0.2.1] - 2026-10-22
+
+### Fixed
+- **Gateway Endpoint Routing**: Migrated default free router endpoint to AnyCommit Vercel Edge Proxy (`anycommit-gateway.vercel.app`) to ensure 100% DNS reachability and bypass regional ISP restrictions.
+- **Adaptive Stream Parsing**: Enhanced client to automatically parse non-streaming standard JSON responses seamlessly alongside SSE streams.
+- **Privacy Hardening**: Removed legacy endpoint references and fortified internal gateway communication with authenticated handshake tokens.
+
 ## [0.2.0] - 2026-10-22
 
 ### Added

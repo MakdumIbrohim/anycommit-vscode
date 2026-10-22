@@ -19,7 +19,13 @@ export class AnyCommitSettingsPanel {
       'anycommit.settings',
       'AnyCommit Settings',
       vscode.ViewColumn.One,
-      { enableScripts: true, retainContextWhenHidden: true }
+      {
+        enableScripts: true,
+        retainContextWhenHidden: true,
+        localResourceRoots: [
+          vscode.Uri.joinPath(context.extensionUri, 'media')
+        ]
+      }
     );
 
     AnyCommitSettingsPanel.currentPanel = new AnyCommitSettingsPanel(panel, context);
@@ -95,7 +101,10 @@ export class AnyCommitSettingsPanel {
   private async _update(): Promise<void> {
     const config = getAnyCommitConfig();
     const apiKey = await getApiKey(this.context.secrets, config.provider);
-    this._panel.webview.html = renderSettingsHtml(config, apiKey || '');
+    const codiconsUri = this._panel.webview.asWebviewUri(
+      vscode.Uri.joinPath(this.context.extensionUri, 'media', 'codicons', 'codicon.css')
+    );
+    this._panel.webview.html = renderSettingsHtml(config, apiKey || '', codiconsUri.toString());
   }
 
   public dispose(): void {

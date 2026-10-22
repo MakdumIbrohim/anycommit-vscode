@@ -6,13 +6,14 @@ import { renderFooterComponent } from './components/footerComponent';
 import { getSettingsStyles } from './settingsStyles';
 import { getSettingsScript } from './settingsScript';
 
-export function renderSettingsHtml(config: any, currentApiKey: string): string {
+export function renderSettingsHtml(config: any, currentApiKey: string, codiconsUri: string = ''): string {
   return /* html */ `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      ${codiconsUri ? `<link rel="stylesheet" href="${codiconsUri}">` : ''}
       <style>
         ${getSettingsStyles()}
       </style>

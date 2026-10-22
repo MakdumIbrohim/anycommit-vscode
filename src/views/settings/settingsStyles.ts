@@ -33,6 +33,7 @@ export function getSettingsStyles(): string {
     .header-container { margin-bottom: 24px; }
     .title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
     .title-row h1 { margin: 0; font-size: 22px; font-weight: 600; }
+    .header-icon { font-size: 22px; color: var(--vscode-textLink-foreground, #3794ff); }
     .subtitle { font-size: 13px; color: var(--desc-fg); margin-top: 4px; }
 
     /* Card Container */
@@ -51,7 +52,7 @@ export function getSettingsStyles(): string {
       padding-bottom: 8px;
       border-bottom: 1px solid var(--card-border);
     }
-    .card-header svg { width: 16px; height: 16px; fill: currentColor; opacity: 0.85; }
+    .card-header .codicon { font-size: 16px; opacity: 0.9; }
     .card-header h2 {
       margin: 0;
       font-size: 13px;
@@ -72,11 +73,9 @@ export function getSettingsStyles(): string {
       font-size: 12.5px;
       margin-bottom: 6px;
     }
-    label svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-      opacity: 0.85;
+    label .codicon {
+      font-size: 14px;
+      opacity: 0.9;
       flex-shrink: 0;
     }
     .help { font-size: 11.5px; color: var(--desc-fg); margin-top: 5px; }
@@ -96,6 +95,56 @@ export function getSettingsStyles(): string {
     /* Custom Row Layouts */
     .input-button-group { display: flex; gap: 8px; }
     .input-button-group input { flex: 1; }
+
+    /* Model Input with Provider Icon */
+    .input-with-icon {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .input-with-icon input {
+      padding-left: 34px;
+    }
+    .input-icon-container {
+      position: absolute;
+      left: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .input-icon-container svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+    }
+    .provider-badge {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--desc-fg);
+    }
+    .provider-badge-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .provider-badge-icon svg {
+      width: 13px;
+      height: 13px;
+      display: block;
+    }
 
     /* Buttons */
     button {
@@ -121,7 +170,7 @@ export function getSettingsStyles(): string {
       border: 1px solid var(--card-border);
     }
     button.secondary:hover { background: var(--btn-sec-hover); }
-    button svg { width: 14px; height: 14px; fill: currentColor; }
+    button .codicon { font-size: 14px; }
 
     /* Empty State Display */
     .empty-state {
@@ -136,7 +185,7 @@ export function getSettingsStyles(): string {
       margin-top: 10px;
       color: var(--desc-fg);
     }
-    .empty-state svg { width: 32px; height: 32px; opacity: 0.45; margin-bottom: 8px; fill: currentColor; }
+    .empty-state .codicon { font-size: 32px; opacity: 0.5; margin-bottom: 8px; }
     .empty-state-title { font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 2px; }
     .empty-state-text { font-size: 12px; max-width: 380px; }
 

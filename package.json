@@ -3,7 +3,7 @@
   "displayName": "AnyCommit: AI Commit Message",
   "icon": "media/icon.png",
   "description": "Generate clean git commit messages from staged diff using OpenAI-compatible APIs, including local gateways (9router, OmniRoute, Ollama, LM Studio) and custom model providers.",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "publisher": "makdumibrohim",
   "license": "MIT",
   "repository": {
@@ -88,8 +88,8 @@
       "properties": {
         "aiCommit.provider": {
           "type": "string",
-          "default": "9router",
-          "description": "Active AI provider ID (built-in preset like 9router, omniroute, openai, openrouter, groq, deepseek, custom, or any custom provider ID from aiCommit.customProviders)."
+          "default": "anycommit",
+          "description": "Active AI provider ID (built-in preset like anycommit, 9router, omniroute, openai, openrouter, groq, deepseek, custom, or any custom provider ID from aiCommit.customProviders)."
         },
         "aiCommit.customProviders": {
           "type": "array",
@@ -130,8 +130,8 @@
         },
         "aiCommit.model": {
           "type": "string",
-          "default": "",
-          "description": "Model or combo name (e.g. cc/claude-opus-4-6, premium-coding, auto/best-coding)."
+          "default": "anycommit/auto-free",
+          "description": "Model or combo name (e.g. anycommit/auto-free, premium-coding, gpt-4o)."
         },
         "aiCommit.language": {
           "type": "string",
@@ -219,12 +219,10 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
+    "@vscode/codicons": "^0.0.46-24",
     "@vscode/vsce": "^2.24.0",
     "prettier": "^3.2.5",
     "typescript": "^5.3.3",
     "vitest": "^1.2.2"
-  },
-  "dependencies": {
-    "@vscode/codicons": "^0.0.46-24"
   }
 }

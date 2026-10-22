@@ -17,6 +17,21 @@ export async function handleSelectProvider(context?: vscode.ExtensionContext): P
 
   const items: ProviderItem[] = [];
 
+  // Group 0: AnyCommit Built-in Gateway
+  items.push({ label: 'AnyCommit Built-in Gateway', kind: vscode.QuickPickItemKind.Separator });
+  const ac = PROVIDER_PRESETS['anycommit'];
+  if (ac) {
+    const isSelected = ac.id.toLowerCase() === currentProviderId;
+    items.push({
+      label: isSelected ? `$(check) ${ac.name}` : `$(sparkle) ${ac.name}`,
+      description: ac.defaultBaseUrl,
+      detail: 'Built-in smart router · Auto-connects to free tier models · No key required',
+      id: ac.id,
+      baseUrl: ac.defaultBaseUrl,
+      requiresApiKey: false
+    });
+  }
+
   // Group 1: Predefined Cloud Providers
   items.push({ label: 'Predefined Cloud Providers', kind: vscode.QuickPickItemKind.Separator });
   const cloudKeys: Array<keyof typeof PROVIDER_PRESETS> = [

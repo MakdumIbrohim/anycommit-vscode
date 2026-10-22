@@ -2,6 +2,17 @@ import { describe, it, expect } from 'vitest';
 import { resolveBaseUrl, PROVIDER_PRESETS } from '../src/core/providers';
 
 describe('providers', () => {
+  it('returns default baseUrl for anycommit gateway', () => {
+    expect(resolveBaseUrl('anycommit')).toBe('https://anycommit-gateway.vercel.app/v1');
+    expect(resolveBaseUrl('anycommit', 'https://openrouter.ai/api/v1')).toBe(
+      'https://anycommit-gateway.vercel.app/v1'
+    );
+    expect(
+      resolveBaseUrl('anycommit', 'https://anycommit-gateway.makdumibrohim3.workers.dev/v1')
+    ).toBe('https://anycommit-gateway.vercel.app/v1');
+    expect(PROVIDER_PRESETS.anycommit.requiresApiKey).toBe(false);
+  });
+
   it('returns default baseUrl for 9router and omniroute', () => {
     expect(resolveBaseUrl('9router')).toBe('http://localhost:20128/v1');
     expect(resolveBaseUrl('omniroute')).toBe('http://localhost:20128/v1');

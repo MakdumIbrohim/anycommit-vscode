@@ -61,10 +61,45 @@ export async function handleSelectModel(context: vscode.ExtensionContext): Promi
     return;
   }
 
-  const items = models.map((m) => ({
-    label: m === currentModel ? `$(check) ${m}` : m,
-    modelId: m
-  }));
+  const items: Array<{ label: string; modelId: string; description?: string }> = [];
+
+  if (provider === 'anycommit') {
+    items.push(
+      {
+        label:
+          currentModel === 'anycommit/auto-free'
+            ? '$(check) anycommit/auto-free'
+            : '$(sparkle) anycommit/auto-free',
+        modelId: 'anycommit/auto-free',
+        description: 'Recommended: Auto-routes to Meta LLaMA 3.3 70B Fast'
+      },
+      {
+        label:
+          currentModel === 'anycommit/deepseek-r1'
+            ? '$(check) anycommit/deepseek-r1'
+            : 'anycommit/deepseek-r1',
+        modelId: 'anycommit/deepseek-r1',
+        description: 'DeepSeek R1 Reasoning Model'
+      },
+      {
+        label:
+          currentModel === 'anycommit/llama-3.2-3b'
+            ? '$(check) anycommit/llama-3.2-3b'
+            : 'anycommit/llama-3.2-3b',
+        modelId: 'anycommit/llama-3.2-3b',
+        description: 'Meta LLaMA 3.2 3B (Lightweight Fast Model)'
+      }
+    );
+  }
+
+  for (const m of models) {
+    if (items.some((i) => i.modelId === m)) continue;
+    items.push({
+      label: m === currentModel ? `$(check) ${m}` : m,
+      modelId: m
+    });
+  }
+
   items.push({
     label: '$(edit) Enter custom model name...',
     modelId: '__custom__'

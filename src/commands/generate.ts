@@ -6,6 +6,7 @@ import { filterAndTruncateDiff } from '../core/diff';
 import { buildMessages } from '../core/prompt';
 import { extractTicket } from '../core/branch';
 import { extractFilePathsFromDiff, detectScopeFromFiles } from '../core/scope';
+import { resolveAnyCommitModel } from '../core/gateway';
 import { cleanModelOutput } from '../core/clean';
 import { chatComplete, chatCompleteStream } from '../core/client';
 import { resolveApiKey } from '../secrets';
@@ -138,6 +139,8 @@ export async function handleGenerate(
     setCommitMessage(repo, '');
   }
 
+  const effectiveModel = resolveAnyCommitModel(model);
+
   const effectiveTemperature = options?.isRegenerate
     ? Math.min(1.0, Number((temperature + 0.2).toFixed(2)))
     : temperature;
@@ -163,7 +166,7 @@ export async function handleGenerate(
         rawResult = await chatCompleteStream({
           baseUrl,
           apiKey,
-          model,
+          model: effectiveModel,
           messages,
           temperature: effectiveTemperature,
           maxTokens,
@@ -201,7 +204,7 @@ export async function handleGenerate(
             rawResult = await chatComplete({
               baseUrl,
               apiKey,
-              model,
+              model: effectiveModel,
               messages,
               temperature: effectiveTemperature,
               maxTokens,

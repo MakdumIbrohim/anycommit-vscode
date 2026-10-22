@@ -47,13 +47,23 @@ function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function buildHeaders(apiKey?: string): Record<string, string> {
+export const ANYCOMMIT_CLIENT_TOKEN = 'ac_gw_makdum_f7a8e9b10c';
+
+function buildHeaders(apiKey?: string, baseUrl?: string): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
   const trimmedKey = apiKey?.trim();
   if (trimmedKey) {
     headers['Authorization'] = `Bearer ${trimmedKey}`;
+  }
+  if (
+    baseUrl &&
+    (baseUrl.includes('anycommit') ||
+      baseUrl.includes('workers.dev') ||
+      baseUrl.includes('vercel.app'))
+  ) {
+    headers['x-anycommit-client-token'] = ANYCOMMIT_CLIENT_TOKEN;
   }
   return headers;
 }
@@ -148,7 +158,7 @@ export async function chatComplete(
   }
 
   const endpoint = `${cleanUrl}/chat/completions`;
-  const headers = buildHeaders(options.apiKey);
+  const headers = buildHeaders(options.apiKey, options.baseUrl);
   const payload = {
     model: options.model,
     messages: options.messages,
@@ -221,7 +231,7 @@ export async function chatCompleteStream(
   }
 
   const endpoint = `${cleanUrl}/chat/completions`;
-  const headers = buildHeaders(options.apiKey);
+  const headers = buildHeaders(options.apiKey, options.baseUrl);
   headers['Accept'] = 'text/event-stream';
 
   const payload = {
@@ -267,6 +277,7 @@ export async function chatCompleteStream(
       }
 
       let fullText = '';
+      let rawAccumulated = '';
       const parser = new SseStreamParser((delta) => {
         fullText += delta;
         options.onToken(delta);
@@ -282,7 +293,9 @@ export async function chatCompleteStream(
               break;
             }
             if (value) {
-              parser.feed(decoder.decode(value, { stream: true }));
+              const text = decoder.decode(value, { stream: true });
+              rawAccumulated += text;
+              parser.feed(text);
             }
           }
         } finally {
@@ -292,14 +305,30 @@ export async function chatCompleteStream(
         const decoder = new TextDecoder();
         for await (const chunk of res.body as any) {
           const text = typeof chunk === 'string' ? chunk : decoder.decode(chunk, { stream: true });
+          rawAccumulated += text;
           parser.feed(text);
         }
       } else {
         const text = await res.text();
+        rawAccumulated = text;
         parser.feed(text);
       }
 
       parser.finish();
+
+      if (!fullText.trim() && rawAccumulated.trim()) {
+        try {
+          const parsed = JSON.parse(rawAccumulated);
+          const jsonContent = parsed?.choices?.[0]?.message?.content;
+          if (typeof jsonContent === 'string' && jsonContent.trim()) {
+            options.onToken(jsonContent);
+            return jsonContent;
+          }
+        } catch {
+          // not json
+        }
+      }
+
       return fullText;
     },
     {
@@ -321,7 +350,7 @@ export async function listModels(
   }
 
   const endpoint = `${cleanUrl}/models`;
-  const headers = buildHeaders(options.apiKey);
+  const headers = buildHeaders(options.apiKey, options.baseUrl);
 
   return executeWithTimeoutAndRetry(
     async (signal) => {

@@ -59,9 +59,7 @@ function buildHeaders(apiKey?: string, baseUrl?: string): Record<string, string>
   }
   if (
     baseUrl &&
-    (baseUrl.includes('anycommit') ||
-      baseUrl.includes('workers.dev') ||
-      baseUrl.includes('vercel.app'))
+    (baseUrl.includes('anycommit') || baseUrl.includes('vercel.app'))
   ) {
     headers['x-anycommit-client-token'] = ANYCOMMIT_CLIENT_TOKEN;
   }

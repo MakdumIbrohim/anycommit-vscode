@@ -38,6 +38,14 @@ export function renderModelCard(config: any): string {
 
         <!-- Discovered Dropdown Container -->
         <div id="modelsDropdownContainer" style="display: none;">
+          <label for="modelSearchInput">
+            <span class="codicon codicon-search"></span>
+            <span>Filter Discovered Models:</span>
+          </label>
+          <div style="margin-bottom: 10px;">
+            <input type="text" id="modelSearchInput" placeholder="Type to filter models (e.g. free, llama, deepseek, gemini)..." />
+          </div>
+
           <label for="modelDropdown">
             <span class="codicon codicon-list-selection"></span>
             <span>Select from Discovered Endpoint Models:</span>

@@ -1,5 +1,12 @@
 export type BuiltinProviderId =
-  '9router' | 'omniroute' | 'openai' | 'openrouter' | 'groq' | 'deepseek' | 'custom';
+  | 'anycommit'
+  | '9router'
+  | 'omniroute'
+  | 'openai'
+  | 'openrouter'
+  | 'groq'
+  | 'deepseek'
+  | 'custom';
 
 export type ProviderId = BuiltinProviderId | string;
 
@@ -19,6 +26,13 @@ export interface CustomProviderConfig {
 }
 
 export const PROVIDER_PRESETS: Record<BuiltinProviderId, ProviderPreset> = {
+  anycommit: {
+    id: 'anycommit',
+    name: 'AnyCommit Gateway (Free Router)',
+    defaultBaseUrl: 'https://anycommit-gateway.vercel.app/v1',
+    isLocal: false,
+    requiresApiKey: false
+  },
   '9router': {
     id: '9router',
     name: '9router',
@@ -76,6 +90,15 @@ export function resolveBaseUrl(
   customProviders?: CustomProviderConfig[]
 ): string {
   const trimmed = override?.trim();
+  if (provider === 'anycommit') {
+    if (
+      !trimmed ||
+      trimmed === 'https://openrouter.ai/api/v1' ||
+      trimmed.includes('workers.dev')
+    ) {
+      return PROVIDER_PRESETS.anycommit.defaultBaseUrl;
+    }
+  }
   if (trimmed) {
     return trimmed;
   }

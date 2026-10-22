@@ -2,6 +2,7 @@ export function getSettingsScript(): string {
   return /* javascript */ `
     const vscode = acquireVsCodeApi();
     const PRESETS = {
+      'anycommit': 'https://anycommit-gateway.vercel.app/v1',
       '9router': 'http://localhost:20128/v1',
       'omniroute': 'http://localhost:20128/v1',
       'openai': 'https://api.openai.com/v1',
@@ -61,6 +62,11 @@ export function getSettingsScript(): string {
         color: '#38bdf8',
         svg: '<span class="codicon codicon-circuit-board" style="color: #38bdf8; font-size: 16px;"></span>'
       },
+      anycommit: {
+        name: 'AnyCommit Gateway',
+        color: '#818cf8',
+        svg: '<span class="codicon codicon-sparkle" style="color: #818cf8; font-size: 15px;"></span>'
+      },
       generic: {
         name: 'AI Model',
         color: 'var(--desc-fg)',
@@ -73,6 +79,7 @@ export function getSettingsScript(): string {
       const p = (preset || '').toLowerCase().trim();
 
       if (m) {
+        if (m.startsWith('anycommit')) return 'anycommit';
         if (m.includes('gpt') || m.includes('chatgpt') || m.includes('openai') || m.includes('o1') || m.includes('o3') || m.includes('davinci')) return 'openai';
         if (m.includes('claude') || m.includes('sonnet') || m.includes('haiku') || m.includes('opus') || m.startsWith('cc/')) return 'anthropic';
         if (m.includes('gemini') || m.includes('gemma') || m.includes('palm')) return 'gemini';
@@ -85,6 +92,7 @@ export function getSettingsScript(): string {
         if (m.includes('9router') || m.includes('omniroute') || m.includes('local') || m.includes('combo')) return 'local';
       }
 
+      if (p === 'anycommit') return 'anycommit';
       if (p === 'openai') return 'openai';
       if (p === 'deepseek') return 'deepseek';
       if (p === 'groq') return 'groq';
@@ -105,8 +113,58 @@ export function getSettingsScript(): string {
     const emptyState = document.getElementById('modelsEmptyState');
     const dropdownContainer = document.getElementById('modelsDropdownContainer');
     const modelDropdown = document.getElementById('modelDropdown');
+    const modelSearchInput = document.getElementById('modelSearchInput');
     const saveBtn = document.getElementById('saveBtn');
     const saveStatus = document.getElementById('saveStatus');
+
+    let rawDiscoveredModels = [];
+
+    const ANYCOMMIT_VIRTUALS = [
+      { id: 'anycommit/auto-free', name: '⭐ anycommit/auto-free (Meta LLaMA 3.3 70B Fast)' },
+      { id: 'anycommit/deepseek-r1', name: 'anycommit/deepseek-r1 (DeepSeek R1 Reasoning)' },
+      { id: 'anycommit/llama-3.2-3b', name: 'anycommit/llama-3.2-3b (Lightweight Fast Model)' }
+    ];
+
+    function renderDiscoveredDropdown(query = '') {
+      const q = (query || '').toLowerCase().trim();
+      modelDropdown.innerHTML = '<option value="">-- Choose discovered model ID --</option>';
+
+      if (providerSelect.value === 'anycommit') {
+        const matchedVirtuals = ANYCOMMIT_VIRTUALS.filter(v => !q || v.id.toLowerCase().includes(q) || v.name.toLowerCase().includes(q));
+        if (matchedVirtuals.length > 0) {
+          const group = document.createElement('optgroup');
+          group.label = 'AnyCommit Virtual Free Models';
+          matchedVirtuals.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v.id;
+            opt.textContent = v.name;
+            group.appendChild(opt);
+          });
+          modelDropdown.appendChild(group);
+        }
+      }
+
+      const filteredRaw = rawDiscoveredModels.filter(m => !q || m.toLowerCase().includes(q));
+      if (filteredRaw.length > 0) {
+        const group = document.createElement('optgroup');
+        group.label = providerSelect.value === 'anycommit' ? 'Discovered Upstream Endpoint Models' : 'Discovered Models';
+        filteredRaw.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m;
+          const detected = detectProvider(m, providerSelect.value);
+          const pName = (PROVIDERS[detected] && detected !== 'generic') ? '[' + PROVIDERS[detected].name + '] ' : '';
+          opt.textContent = pName + m;
+          group.appendChild(opt);
+        });
+        modelDropdown.appendChild(group);
+      }
+    }
+
+    if (modelSearchInput) {
+      modelSearchInput.addEventListener('input', () => {
+        renderDiscoveredDropdown(modelSearchInput.value);
+      });
+    }
 
     function updateModelProvider() {
       const modelVal = modelInput.value.trim();
@@ -130,11 +188,44 @@ export function getSettingsScript(): string {
       }
     }
 
+    const apiKeyInput = document.getElementById('apiKey');
+    const apiKeyHelp = document.getElementById('apiKeyHelp');
+
+    function updateApiKeyVisibility() {
+      const val = providerSelect.value;
+      if (val === 'anycommit') {
+        if (apiKeyHelp) {
+          apiKeyHelp.textContent = 'Not required. AnyCommit Gateway connects directly to Cloudflare Worker without authentication.';
+          apiKeyHelp.style.color = 'var(--success-fg)';
+        }
+        if (apiKeyInput) {
+          apiKeyInput.placeholder = 'Optional / Not required for AnyCommit Gateway';
+        }
+      } else if (val === '9router' || val === 'omniroute') {
+        if (apiKeyHelp) {
+          apiKeyHelp.textContent = 'Optional for local gateways without authentication.';
+          apiKeyHelp.style.color = 'var(--desc-fg)';
+        }
+        if (apiKeyInput) {
+          apiKeyInput.placeholder = 'Leave empty for local gateways';
+        }
+      } else {
+        if (apiKeyHelp) {
+          apiKeyHelp.textContent = 'Required for ' + val + '. Encrypted in SecretStorage.';
+          apiKeyHelp.style.color = 'var(--desc-fg)';
+        }
+        if (apiKeyInput) {
+          apiKeyInput.placeholder = 'Enter API key for ' + val;
+        }
+      }
+    }
+
     providerSelect.addEventListener('change', () => {
       const val = providerSelect.value;
       if (PRESETS[val]) {
         baseUrlInput.value = PRESETS[val];
       }
+      updateApiKeyVisibility();
       updateModelProvider();
     });
 
@@ -169,22 +260,15 @@ export function getSettingsScript(): string {
       fetchBtn.innerHTML = '<span class="codicon codicon-refresh"></span><span>Fetch Models</span>';
 
       if (msg.command === 'modelsLoaded') {
-        if (!msg.models || msg.models.length === 0) {
+        rawDiscoveredModels = msg.models || [];
+        if (rawDiscoveredModels.length === 0 && providerSelect.value !== 'anycommit') {
           fetchStatus.textContent = 'Endpoint returned 0 models.';
           fetchStatus.style.color = 'var(--error-fg)';
           return;
         }
-        fetchStatus.textContent = 'Successfully discovered ' + msg.models.length + ' model(s).';
+        fetchStatus.textContent = 'Successfully discovered ' + rawDiscoveredModels.length + ' model(s).';
         fetchStatus.style.color = 'var(--success-fg)';
-        modelDropdown.innerHTML = '<option value="">-- Choose discovered model ID --</option>';
-        msg.models.forEach(m => {
-          const opt = document.createElement('option');
-          opt.value = m;
-          const detected = detectProvider(m, providerSelect.value);
-          const pName = (PROVIDERS[detected] && detected !== 'generic') ? '[' + PROVIDERS[detected].name + '] ' : '';
-          opt.textContent = pName + m;
-          modelDropdown.appendChild(opt);
-        });
+        renderDiscoveredDropdown(modelSearchInput ? modelSearchInput.value : '');
         emptyState.style.display = 'none';
         dropdownContainer.style.display = 'block';
       } else if (msg.command === 'error') {
@@ -218,5 +302,6 @@ export function getSettingsScript(): string {
     });
 
     updateModelProvider();
+    updateApiKeyVisibility();
   `;
 }

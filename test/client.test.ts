@@ -198,6 +198,30 @@ describe('LLM client', () => {
         )
       ).rejects.toThrow('API key missing or invalid.');
     });
+
+    it('gracefully handles standard JSON response when stream is unsupported by gateway', async () => {
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        text: async () =>
+          JSON.stringify({ choices: [{ message: { content: 'feat: json commit' } }] }),
+        body: null
+      });
+
+      const tokens: string[] = [];
+      const result = await chatCompleteStream(
+        {
+          baseUrl,
+          model: 'anycommit/auto-free',
+          messages: [{ role: 'user', content: 'test' }],
+          onToken: (t) => tokens.push(t),
+          retryDelayMs: 0
+        },
+        mockFetch as any
+      );
+
+      expect(result).toBe('feat: json commit');
+      expect(tokens).toEqual(['feat: json commit']);
+    });
   });
 
   describe('listModels', () => {

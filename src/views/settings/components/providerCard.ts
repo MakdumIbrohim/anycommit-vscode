@@ -16,6 +16,9 @@ export function renderProviderCard(config: any, currentApiKey: string): string {
           <span>Active Gateway / Preset</span>
         </label>
         <select id="providerSelect">
+          <optgroup label="AnyCommit Gateway (Free Tier)">
+            <option value="anycommit" ${config.provider === 'anycommit' ? 'selected' : ''}>AnyCommit Gateway (Free Router)</option>
+          </optgroup>
           <optgroup label="Local Gateways (Zero-Config)">
             <option value="9router" ${config.provider === '9router' ? 'selected' : ''}>9router (Local Gateway)</option>
             <option value="omniroute" ${config.provider === 'omniroute' ? 'selected' : ''}>OmniRoute (Local Gateway)</option>
@@ -53,13 +56,13 @@ export function renderProviderCard(config: any, currentApiKey: string): string {
         <div class="help">Must terminate with a <code>/v1</code> route path.</div>
       </div>
 
-      <div class="field">
+      <div class="field" id="apiKeyField">
         <label for="apiKey">
           <span class="codicon codicon-key"></span>
-          <span>API Authentication Key</span>
+          <span id="apiKeyLabelText">API Authentication Key</span>
         </label>
-        <input type="password" id="apiKey" value="${currentApiKey}" placeholder="Leave empty for local gateways without authentication" />
-        <div class="help">Encrypted locally. Never written to settings.json or git tracking.</div>
+        <input type="password" id="apiKey" value="${currentApiKey}" placeholder="Optional / Not required for AnyCommit Gateway" />
+        <div id="apiKeyHelp" class="help">Not required for AnyCommit Gateway. Connects directly to Cloudflare Worker without authentication.</div>
       </div>
     </div>
   `;

@@ -25,7 +25,7 @@ export interface AnyCommitConfig {
 
 export function getAnyCommitConfig(): AnyCommitConfig {
   const cfg = vscode.workspace.getConfiguration('aiCommit');
-  const provider = (cfg.get<string>('provider') || '9router') as ProviderId;
+  const provider = (cfg.get<string>('provider') || 'anycommit') as ProviderId;
   const baseUrl = cfg.get<string>('baseUrl') || '';
   const customProviders = cfg.get<CustomProviderConfig[]>('customProviders') || [];
   const resolvedBaseUrl = resolveBaseUrl(provider, baseUrl, customProviders);
@@ -36,7 +36,7 @@ export function getAnyCommitConfig(): AnyCommitConfig {
     resolvedBaseUrl,
     customProviders,
     apiKey: cfg.get<string>('apiKey')?.trim() || undefined,
-    model: cfg.get<string>('model')?.trim() || '',
+    model: cfg.get<string>('model')?.trim() || 'anycommit/auto-free',
     language: cfg.get<string>('language') || 'English',
     style: (cfg.get<string>('style') as CommitStyle) || 'conventional',
     includeBody: cfg.get<boolean>('includeBody') ?? false,

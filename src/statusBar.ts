@@ -26,8 +26,12 @@ export function updateStatusBarItem(item: vscode.StatusBarItem): void {
   const provider = config.provider;
   const model = config.model;
 
-  const modelLabel = model ? ` (${model})` : ' (no model)';
-  item.text = `$(git-commit) AnyCommit: ${provider}${modelLabel}`;
+  if (provider === 'anycommit') {
+    item.text = `$(sparkle) AnyCommit: ${model || 'auto-free'}`;
+  } else {
+    const modelLabel = model ? ` (${model})` : ' (no model)';
+    item.text = `$(git-commit) AnyCommit: ${provider}${modelLabel}`;
+  }
   item.tooltip = new vscode.MarkdownString(
     `**AnyCommit: AI Commit Message**\n\n` +
       `- **Provider:** \`${provider}\`\n` +

@@ -12,6 +12,7 @@ export class AnyCommitSettingsPanel {
   public static createOrShow(context: vscode.ExtensionContext): void {
     if (AnyCommitSettingsPanel.currentPanel) {
       AnyCommitSettingsPanel.currentPanel._panel.reveal(vscode.ViewColumn.One);
+      AnyCommitSettingsPanel.currentPanel._update();
       return;
     }
 
@@ -45,9 +46,12 @@ export class AnyCommitSettingsPanel {
         switch (message.command) {
           case 'fetchModels':
             try {
+              const cfg = getAnyCommitConfig();
+              const storedKey = await getApiKey(this.context.secrets, cfg.provider);
+              const apiKey = message.apiKey || storedKey || '';
               const models = await listModels({
                 baseUrl: message.baseUrl,
-                apiKey: message.apiKey,
+                apiKey,
                 timeoutSeconds: 15
               });
               this._panel.webview.postMessage({ command: 'modelsLoaded', models });

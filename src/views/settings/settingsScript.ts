@@ -73,16 +73,16 @@ export function getSettingsScript(): string {
       const p = (preset || '').toLowerCase().trim();
 
       if (m) {
-        if (/gpt|chatgpt|openai|^o[13](-preview|-mini)?|davinci|babbage/.test(m)) return 'openai';
-        if (/claude|sonnet|haiku|opus|^cc\//.test(m)) return 'anthropic';
-        if (/gemini|gemma|palm/.test(m)) return 'gemini';
-        if (/deepseek|r1\b/.test(m)) return 'deepseek';
-        if (/llama|meta/.test(m)) return 'meta';
-        if (/mistral|codestral|mixtral|pixtral|ministral/.test(m)) return 'mistral';
-        if (/qwen|qwq/.test(m)) return 'qwen';
-        if (/groq/.test(m)) return 'groq';
-        if (/ollama/.test(m)) return 'ollama';
-        if (/9router|omniroute|local|combo/.test(m)) return 'local';
+        if (m.includes('gpt') || m.includes('chatgpt') || m.includes('openai') || m.includes('o1') || m.includes('o3') || m.includes('davinci')) return 'openai';
+        if (m.includes('claude') || m.includes('sonnet') || m.includes('haiku') || m.includes('opus') || m.startsWith('cc/')) return 'anthropic';
+        if (m.includes('gemini') || m.includes('gemma') || m.includes('palm')) return 'gemini';
+        if (m.includes('deepseek') || m.includes('r1')) return 'deepseek';
+        if (m.includes('llama') || m.includes('meta')) return 'meta';
+        if (m.includes('mistral') || m.includes('codestral') || m.includes('mixtral') || m.includes('pixtral') || m.includes('ministral')) return 'mistral';
+        if (m.includes('qwen') || m.includes('qwq')) return 'qwen';
+        if (m.includes('groq')) return 'groq';
+        if (m.includes('ollama')) return 'ollama';
+        if (m.includes('9router') || m.includes('omniroute') || m.includes('local') || m.includes('combo')) return 'local';
       }
 
       if (p === 'openai') return 'openai';
@@ -142,7 +142,8 @@ export function getSettingsScript(): string {
 
     fetchBtn.addEventListener('click', () => {
       const baseUrl = baseUrlInput.value.trim();
-      const apiKey = document.getElementById('apiKey').value.trim();
+      const apiKeyEl = document.getElementById('apiKey');
+      const apiKey = apiKeyEl ? apiKeyEl.value.trim() : '';
       if (!baseUrl) {
         fetchStatus.textContent = 'Please enter a valid Base URL first.';
         fetchStatus.style.color = 'var(--error-fg)';

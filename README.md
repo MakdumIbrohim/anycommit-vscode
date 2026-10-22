@@ -17,9 +17,6 @@
   <img src="https://img.shields.io/badge/Dependencies-0%20Runtime-orange.svg" alt="Zero Runtime Dependencies" />
 </p>
 
-<!-- DEMO PREVIEW -->
-<!-- <p align="center"><img src="media/demo.gif" alt="AnyCommit Demo" width="100%" /></p> -->
-
 ---
 
 ## Overview

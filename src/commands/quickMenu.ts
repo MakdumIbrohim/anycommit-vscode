@@ -44,9 +44,17 @@ export async function handleShowQuickMenu(): Promise<void> {
       }
     },
     {
-      label: '$(gear) Extension Settings',
-      description: 'Open AnyCommit Settings',
-      detail: 'Configure style, language, ticket regex, diff limits, etc.',
+      label: '$(gear) Settings Dashboard',
+      description: 'Open AnyCommit Visual Settings',
+      detail: 'Configure providers, fetch live models, and customize commit style',
+      action: async () => {
+        await vscode.commands.executeCommand('aiCommit.openSettings');
+      }
+    },
+    {
+      label: '$(settings) Native VS Code Settings',
+      description: 'Open settings.json entries',
+      detail: 'Configure raw settings in VS Code Preferences',
       action: async () => {
         await vscode.commands.executeCommand(
           'workbench.action.openSettings',
